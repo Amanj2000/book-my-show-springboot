@@ -36,8 +36,13 @@ public class AuthService {
 		if(userRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
 			return new ResponseDTO(false, "user by this email already exists");
 		} else {
-			User user = new User(signupRequest.getEmail(), passwordEncoder.encode(signupRequest.getPassword()),
-					signupRequest.getFirstName(), signupRequest.getLastName(), signupRequest.getAge());
+			User user = new User();
+			user.setEmail(signupRequest.getEmail());
+			user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+			user.setFirstName(signupRequest.getFirstName());
+			user.setLastName(signupRequest.getLastName());
+			user.setAge(signupRequest.getAge());
+
 			userRepository.save(user);
 			return new ResponseDTO(true, "user has been registered");
 		}
