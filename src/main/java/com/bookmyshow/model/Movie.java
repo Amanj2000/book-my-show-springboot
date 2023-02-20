@@ -1,9 +1,11 @@
 package com.bookmyshow.model;
 
+import com.bookmyshow.model.enums.Genre;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +22,17 @@ public class Movie {
 	private String title;
 
 	@Column(nullable = false)
-	private String director;
+	private String description;
+
+	@Column(nullable = false)
+	@Temporal(TemporalType.TIME)
+	private Date duration;
+
+	@Column(nullable = false)
+	private String language;
+
+	@Column(nullable = false)
+	private Genre genre;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "movies_actor",
@@ -28,8 +40,11 @@ public class Movie {
 	           inverseJoinColumns = @JoinColumn(name = "actor_id"))
 	private Set<Actor> actors = new HashSet<>();
 
-	public Movie(String title, String director) {
+	public Movie(String title, String description, Date duration, String language, Genre genre) {
 		this.title = title;
-		this.director = director;
+		this.description = description;
+		this.duration = duration;
+		this.language = language;
+		this.genre = genre;
 	}
 }
