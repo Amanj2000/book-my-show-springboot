@@ -1,15 +1,15 @@
 package com.bookmyshow.model;
 
 import com.bookmyshow.model.enums.Genre;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "movies")
@@ -34,7 +34,7 @@ public class Movie {
 	@Enumerated(EnumType.STRING)
 	private Genre genre;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinTable(name = "movies_actor",
 	           joinColumns = @JoinColumn(name="movie_id"),
 	           inverseJoinColumns = @JoinColumn(name = "actor_id"))
