@@ -18,7 +18,7 @@ public class AudiSeat {
 	private Integer id;
 
 	@Column(nullable = false)
-	private Integer seatNo;
+	private String seatNo;
 
 	@Column(nullable = false)
 	private SeatType seatType;
@@ -27,7 +27,7 @@ public class AudiSeat {
 	@JoinColumn(name = "audi_id", nullable = false)
 	private Audi audi;
 
-	public AudiSeat(Integer seatNo, SeatType seatType, Audi audi) {
+	public AudiSeat(String seatNo, SeatType seatType, Audi audi) {
 		this.seatNo = seatNo;
 		this.seatType = seatType;
 		this.audi = audi;

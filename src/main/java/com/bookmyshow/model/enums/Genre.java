@@ -1,10 +1,11 @@
 package com.bookmyshow.model.enums;
 
 public enum Genre {
+	ACTION,
 	COMEDY,
 	HORROR,
 	PSYCHOLOGY,
 	FANTASY,
-	THRILLER,
-	ADVENTURE
+	CRIME,
+	THRILLER
 }
