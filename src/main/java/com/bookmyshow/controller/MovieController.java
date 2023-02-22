@@ -2,6 +2,7 @@ package com.bookmyshow.controller;
 
 import com.bookmyshow.dto.MovieRequestDTO;
 import com.bookmyshow.dto.MovieResponseDTO;
+import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,17 +39,17 @@ public class MovieController {
 	}
 
 	@PostMapping
-	public void addMovie(@Valid @RequestBody MovieRequestDTO movieRequestDTO) {
-		movieService.addMovie(movieRequestDTO);
+	public ResponseDTO addMovie(@Valid @RequestBody MovieRequestDTO movieRequestDTO) {
+		return movieService.addMovie(movieRequestDTO);
 	}
 
 	@PutMapping("/{movieId}")
-	public void updateMovie(@PathVariable int movieId, @Valid @RequestBody MovieRequestDTO movieRequestDTO) {
-		movieService.updateMovie(movieId, movieRequestDTO);
+	public ResponseDTO updateMovie(@PathVariable int movieId, @Valid @RequestBody MovieRequestDTO movieRequestDTO) {
+		return movieService.updateMovie(movieId, movieRequestDTO);
 	}
 
 	@DeleteMapping("/{movieId}")
-	public void deleteMovie(@PathVariable int movieId) {
-		movieService.deleteMovie(movieId);
+	public ResponseDTO deleteMovie(@PathVariable int movieId) {
+		return movieService.deleteMovie(movieId);
 	}
 }

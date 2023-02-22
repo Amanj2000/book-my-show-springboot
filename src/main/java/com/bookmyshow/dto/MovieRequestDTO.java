@@ -1,7 +1,5 @@
 package com.bookmyshow.dto;
 
-import com.bookmyshow.helper.EnumValidator;
-import com.bookmyshow.model.enums.Genre;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -24,8 +22,7 @@ public class MovieRequestDTO {
 	@NotBlank
 	private String language;
 
-	@NotNull
-	@EnumValidator(enumClass = Genre.class, message = "Invalid Genre type")
+	@NotBlank
 	private String genre;
 
 	@NotEmpty
