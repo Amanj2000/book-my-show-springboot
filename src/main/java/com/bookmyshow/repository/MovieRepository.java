@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository extends CrudRepository<Movie, Integer> {
-	@Query("FROM Movie WHERE TITLE LIKE '%?1%'")
-	List<Movie> findByPartialMovieName(String partialMovieName);
+	List<Movie> findByTitleContaining(String partialMovieName);
 }

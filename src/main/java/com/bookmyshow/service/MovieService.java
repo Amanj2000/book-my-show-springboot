@@ -5,21 +5,23 @@ import com.bookmyshow.dto.MovieResponseDTO;
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.model.Movie;
 import com.bookmyshow.model.enums.Genre;
+import com.bookmyshow.repository.ActorRepository;
 import com.bookmyshow.repository.MovieRepository;
 import com.bookmyshow.util.MovieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
 
 	@Autowired
 	MovieRepository movieRepository;
+
+	@Autowired
+	ActorRepository actorRepository;
 
 	@Autowired
 	MovieUtil movieUtil;
@@ -32,19 +34,25 @@ public class MovieService {
 	}
 
 	public List<MovieResponseDTO> getByMovieName(String partialMovieName) {
-		// TODO
-//		return movieRepository.findByPartialMovieName(partialMovieName);
-		return null;
+		return movieRepository.findByTitleContaining(partialMovieName)
+		                      .stream()
+		                      .map(MovieResponseDTO::new)
+		                      .collect(Collectors.toList());
 	}
 
 	public List<MovieResponseDTO> getByActorName(String actorName) {
-		// TODO
-		return null;
+		Set<Movie> movies = new HashSet<>();
+		actorRepository.findByNameContaining(actorName)
+		               .forEach(actor -> movies.addAll(actor.getMovies()));
+		return movies.stream()
+		             .map(MovieResponseDTO::new )
+		             .collect(Collectors.toList());
 	}
 
 	public MovieResponseDTO getMovie(int movieId) {
 		Optional<Movie> movie = movieRepository.findById(movieId);
-		return movie.map(MovieResponseDTO::new).orElse(null);
+		return movie.map(MovieResponseDTO::new)
+		            .orElse(null);
 	}
 
 	public ResponseDTO addMovie(MovieRequestDTO movieRequestDTO) {

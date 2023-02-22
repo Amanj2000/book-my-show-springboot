@@ -39,12 +39,12 @@ public class MovieUtil {
 
 	private Set<Actor> createActorSet(List<String> cast) {
 		return cast.stream()
-				.map(actorName -> {
-					if(!actorRepository.existsByName(actorName)) {
-						actorRepository.save(new Actor(actorName));
-					}
-					return actorRepository.findByName(actorName).get();
-				})
-				.collect(Collectors.toSet());
+		           .map(actorName -> {
+					   if(!actorRepository.existsByName(actorName)) {
+						   actorRepository.save(new Actor(actorName));
+					   }
+					   return actorRepository.findByName(actorName).get();
+				   })
+		           .collect(Collectors.toSet());
 	}
 }
