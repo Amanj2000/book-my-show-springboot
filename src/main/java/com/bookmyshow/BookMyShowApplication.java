@@ -1,11 +1,9 @@
 package com.bookmyshow;
 
-import com.bookmyshow.model.Actor;
-import com.bookmyshow.model.Movie;
-import com.bookmyshow.model.User;
+import com.bookmyshow.model.*;
 import com.bookmyshow.model.enums.Genre;
-import com.bookmyshow.repository.ActorRepository;
 import com.bookmyshow.repository.MovieRepository;
+import com.bookmyshow.repository.TheatreRepository;
 import com.bookmyshow.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,10 +23,12 @@ public class BookMyShowApplication {
 
 	@Bean
 	CommandLineRunner commandLineRunner(UserRepository userRepository, PasswordEncoder passwordEncoder,
-	                                    MovieRepository movieRepository, ActorRepository actorRepository) {
+	                                    MovieRepository movieRepository,
+	                                    TheatreRepository theatreRepository) {
 		return args -> {
-			saveMovies(movieRepository, actorRepository);
 			saveUsers(userRepository, passwordEncoder);
+			saveMovies(movieRepository);
+			saveTheatres(theatreRepository);
 		};
 	}
 
@@ -47,7 +47,7 @@ public class BookMyShowApplication {
 
 
 	@SuppressWarnings("SpellCheckingInspection")
-	private void saveMovies(MovieRepository movieRepository, ActorRepository actorRepository) {
+	private void saveMovies(MovieRepository movieRepository) {
 		Actor shahRukhKhan = new Actor("Shah Rukh Khan");
 		Actor johnAbraham = new Actor("John Abraham");
 		Actor salmanKhan = new Actor("Salman Khan");
@@ -61,10 +61,6 @@ public class BookMyShowApplication {
 		Actor deepikaPadukone = new Actor("Deepika Padukone");
 		Actor katrinaKaif = new Actor("Katrina Kaif");
 		Actor kritiSanon = new Actor("Kriti Sanon");
-
-		actorRepository.saveAll(
-				Arrays.asList(shahRukhKhan, johnAbraham, salmanKhan, rajkumarRao, ayushmannKhurrana, akshayKumar,
-						nanaPatekar, anilKapoor, deepikaPadukone, katrinaKaif, kritiSanon));
 
 		Movie pathan = new Movie(
 				"Pathan",
@@ -102,10 +98,20 @@ public class BookMyShowApplication {
 				new HashSet<>(Arrays.asList(rajkumarRao, ayushmannKhurrana, kritiSanon))
 		);
 
-		movieRepository.save(pathan);
-		movieRepository.save(welcome);
-		movieRepository.save(ekThaTiger);
-		movieRepository.save(bareillyKiBarfi);
+		movieRepository.saveAll(Arrays.asList(pathan, welcome, ekThaTiger, bareillyKiBarfi));
+	}
+
+	@SuppressWarnings("SpellCheckingInspection")
+	private void saveTheatres(TheatreRepository theatreRepository) {
+		City bangalore = new City("Bangalore", "Karnataka");
+		City agra = new City("Agra", "Uttar Pradesh");
+
+		Theatre pvrPhoenix = new Theatre("PVR Phoenix MarketCity Mall", "Whitefield Road", bangalore);
+		Theatre cinepolisNexus = new Theatre("Cinepolis Nexus Shantiniketan", "Thigalarapalya", bangalore);
+		Theatre sanjayTalkies = new Theatre("Sanjay Talkies", "Sanjay Palace", agra);
+		Theatre sarvmultiplex = new Theatre("Sarv Multiplex", "Sanjay Palace", agra);
+
+		theatreRepository.saveAll(Arrays.asList(pvrPhoenix, cinepolisNexus, sanjayTalkies, sarvmultiplex));
 	}
 }
 
