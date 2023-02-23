@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -34,13 +34,13 @@ public class Movie {
 	@Enumerated(EnumType.STRING)
 	private Genre genre;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "movies_actor",
 	           joinColumns = @JoinColumn(name="movie_id"),
 	           inverseJoinColumns = @JoinColumn(name = "actor_id"))
-	private Set<Actor> actors = new HashSet<>();
+	private List<Actor> actors = new ArrayList<>();
 
-	public Movie(String title, String description, Integer duration, String language, Genre genre, Set<Actor> actors) {
+	public Movie(String title, String description, Integer duration, String language, Genre genre, List<Actor> actors) {
 		this.title = title;
 		this.description = description;
 		this.duration = duration;

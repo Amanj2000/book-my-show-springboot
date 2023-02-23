@@ -68,7 +68,7 @@ public class BookMyShowApplication {
 				146,
 				"Hindi",
 				Genre.ACTION,
-				new HashSet<>(Arrays.asList(shahRukhKhan, salmanKhan, johnAbraham, deepikaPadukone))
+				Arrays.asList(shahRukhKhan, salmanKhan, johnAbraham, deepikaPadukone)
 		);
 
 		Movie welcome = new Movie(
@@ -77,7 +77,7 @@ public class BookMyShowApplication {
 				159,
 				"Hindi",
 				Genre.COMEDY,
-				new HashSet<>(Arrays.asList(akshayKumar, nanaPatekar, anilKapoor, katrinaKaif))
+				Arrays.asList(akshayKumar, nanaPatekar, anilKapoor, katrinaKaif)
 		);
 
 		Movie ekThaTiger = new Movie(
@@ -86,7 +86,7 @@ public class BookMyShowApplication {
 				132,
 				"Hindi",
 				Genre.ACTION,
-				new HashSet<>(Arrays.asList(salmanKhan, katrinaKaif))
+				Arrays.asList(salmanKhan, katrinaKaif)
 		);
 
 		Movie bareillyKiBarfi = new Movie(
@@ -95,7 +95,7 @@ public class BookMyShowApplication {
 				122,
 				"Hindi",
 				Genre.COMEDY,
-				new HashSet<>(Arrays.asList(rajkumarRao, ayushmannKhurrana, kritiSanon))
+				Arrays.asList(rajkumarRao, ayushmannKhurrana, kritiSanon)
 		);
 
 		movieRepository.saveAll(Arrays.asList(pathan, welcome, ekThaTiger, bareillyKiBarfi));

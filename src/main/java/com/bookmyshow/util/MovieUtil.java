@@ -44,7 +44,7 @@ public class MovieUtil {
 		movie.setActors(createActorSet(movieRequestDTO.getCast()));
 	}
 
-	private Set<Actor> createActorSet(List<String> cast) {
+	private List<Actor> createActorSet(List<String> cast) {
 		return cast.stream()
 		           .map(actorName -> {
 					   if(!actorRepository.existsByName(actorName)) {
@@ -52,6 +52,6 @@ public class MovieUtil {
 					   }
 					   return actorRepository.findByName(actorName).get();
 				   })
-		           .collect(Collectors.toSet());
+		           .collect(Collectors.toList());
 	}
 }

@@ -4,8 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,10 +27,7 @@ public class Audi {
 	private Theatre theatre;
 
 	@OneToMany(mappedBy = "audi", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	private Set<Show> shows = new HashSet<>();
-
-	@OneToMany(mappedBy = "audi", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	private Set<AudiSeat> audiSeats = new HashSet<>();
+	private List<Show> shows = new ArrayList<>();
 
 	public Audi(Integer audiNo, Integer noOfSeats, Theatre theatre) {
 		this.audiNo = audiNo;

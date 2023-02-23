@@ -4,9 +4,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Data
 @NoArgsConstructor
@@ -38,7 +39,7 @@ public class Show {
 	private Audi audi;
 
 	@OneToMany(mappedBy = "show", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	private Set<ShowSeat> showSeats = new HashSet<>();
+	private List<ShowSeat> showSeats = new ArrayList<>();
 
 	public Show(Date date, Date startTime, Date endTime, Movie movie, Audi audi) {
 		this.date = date;
