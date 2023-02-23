@@ -33,6 +33,11 @@ public class MovieController {
 		return movieService.getByActorName(actorName);
 	}
 
+	@GetMapping(params = "genre")
+	public List<MovieResponseDTO> getByGenre(@RequestParam String genre) {
+		return movieService.getByGenre(genre);
+	}
+
 	@GetMapping("/{movieId}")
 	public MovieResponseDTO getMovie(@PathVariable int movieId) {
 		return movieService.getMovie(movieId);

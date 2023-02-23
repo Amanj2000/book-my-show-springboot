@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
@@ -34,19 +33,18 @@ public class MovieService {
 	}
 
 	public List<MovieResponseDTO> getByMovieName(String partialMovieName) {
-		return movieRepository.findByTitleContaining(partialMovieName)
-		                      .stream()
-		                      .map(MovieResponseDTO::new)
-		                      .collect(Collectors.toList());
+		return movieUtil.toMovieResponseDTOS(movieRepository.findByTitleContaining(partialMovieName));
 	}
 
 	public List<MovieResponseDTO> getByActorName(String actorName) {
 		Set<Movie> movies = new HashSet<>();
 		actorRepository.findByNameContaining(actorName)
 		               .forEach(actor -> movies.addAll(actor.getMovies()));
-		return movies.stream()
-		             .map(MovieResponseDTO::new )
-		             .collect(Collectors.toList());
+		return movieUtil.toMovieResponseDTOS(new ArrayList<>(movies));
+	}
+
+	public List<MovieResponseDTO> getByGenre(String genre) {
+		return movieUtil.toMovieResponseDTOS(movieRepository.findByGenre(genre.toUpperCase()));
 	}
 
 	public MovieResponseDTO getMovie(int movieId) {

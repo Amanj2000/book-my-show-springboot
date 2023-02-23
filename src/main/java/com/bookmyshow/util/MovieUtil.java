@@ -1,6 +1,7 @@
 package com.bookmyshow.util;
 
 import com.bookmyshow.dto.MovieRequestDTO;
+import com.bookmyshow.dto.MovieResponseDTO;
 import com.bookmyshow.model.Actor;
 import com.bookmyshow.model.Movie;
 import com.bookmyshow.model.enums.Genre;
@@ -26,6 +27,12 @@ public class MovieUtil {
 		} catch(IllegalArgumentException e) {
 			return false;
 		}
+	}
+
+	public List<MovieResponseDTO> toMovieResponseDTOS(List<Movie> movies) {
+		return movies.stream()
+		             .map(MovieResponseDTO::new)
+		             .collect(Collectors.toList());
 	}
 
 	public void mapMovieRequestToMovie(MovieRequestDTO movieRequestDTO, Movie movie) {
