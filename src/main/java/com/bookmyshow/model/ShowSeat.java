@@ -30,7 +30,9 @@ public class ShowSeat {
 	private AudiSeat audiSeat;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "booking_id", nullable = false)
+	@JoinTable(name = "booked_seats",
+	           joinColumns = @JoinColumn(name="show_seat_id"),
+	           inverseJoinColumns = @JoinColumn(name = "booking_id"))
 	private Booking booking;
 
 	public ShowSeat(Integer price, SeatStatus seatStatus, Show show, AudiSeat audiSeat, Booking booking) {
