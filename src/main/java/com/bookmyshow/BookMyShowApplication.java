@@ -2,8 +2,8 @@ package com.bookmyshow;
 
 import com.bookmyshow.model.*;
 import com.bookmyshow.model.enums.Genre;
+import com.bookmyshow.repository.AudiRepository;
 import com.bookmyshow.repository.MovieRepository;
-import com.bookmyshow.repository.TheatreRepository;
 import com.bookmyshow.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
-import java.util.HashSet;
 
 @SpringBootApplication
 public class BookMyShowApplication {
@@ -24,11 +23,11 @@ public class BookMyShowApplication {
 	@Bean
 	CommandLineRunner commandLineRunner(UserRepository userRepository, PasswordEncoder passwordEncoder,
 	                                    MovieRepository movieRepository,
-	                                    TheatreRepository theatreRepository) {
+	                                    AudiRepository audiRepository) {
 		return args -> {
 			saveUsers(userRepository, passwordEncoder);
 			saveMovies(movieRepository);
-			saveTheatres(theatreRepository);
+			saveAudis(audiRepository);
 		};
 	}
 
@@ -102,7 +101,7 @@ public class BookMyShowApplication {
 	}
 
 	@SuppressWarnings("SpellCheckingInspection")
-	private void saveTheatres(TheatreRepository theatreRepository) {
+	private void saveAudis(AudiRepository audiRepository) {
 		City bangalore = new City("Bangalore", "Karnataka");
 		City agra = new City("Agra", "Uttar Pradesh");
 
@@ -111,7 +110,17 @@ public class BookMyShowApplication {
 		Theatre sanjayTalkies = new Theatre("Sanjay Talkies", "Sanjay Palace", agra);
 		Theatre sarvmultiplex = new Theatre("Sarv Multiplex", "Sanjay Palace", agra);
 
-		theatreRepository.saveAll(Arrays.asList(pvrPhoenix, cinepolisNexus, sanjayTalkies, sarvmultiplex));
+		Audi audiPvr1 = new Audi(1, pvrPhoenix);
+		Audi audiPvr2 = new Audi(2, pvrPhoenix);
+		Audi audiCinepolis1 = new Audi(1, cinepolisNexus);
+		Audi audiCinepolis2 = new Audi(2, cinepolisNexus);
+		Audi audiSanjay1 = new Audi(1, sanjayTalkies);
+		Audi audiSanjay2 = new Audi(2, sanjayTalkies);
+		Audi audiSarv1 = new Audi(1, sarvmultiplex);
+		Audi audiSarv2 = new Audi(2, sarvmultiplex);
+
+		audiRepository.saveAll(Arrays.asList(audiPvr1, audiPvr2, audiCinepolis1, audiCinepolis2, audiSanjay1,
+				audiSanjay2, audiSarv1, audiSarv2));
 	}
 }
 
