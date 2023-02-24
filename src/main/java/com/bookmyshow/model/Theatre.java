@@ -27,7 +27,7 @@ public class Theatre {
 	@JoinColumn(name = "city_id", nullable = false)
 	private City city;
 
-	@OneToMany(mappedBy = "theatre", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "theatre", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private List<Audi> audis = new ArrayList<>();
 
 	public Theatre(String name, String address, City city) {
