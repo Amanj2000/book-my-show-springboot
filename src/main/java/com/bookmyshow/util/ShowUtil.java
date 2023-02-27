@@ -48,6 +48,17 @@ public class ShowUtil {
 		return new ResponseDTO(false, "invalid show id");
 	}
 
+	public ResponseDTO checkShow(int movieId, int showId) {
+		ResponseDTO responseDTO = checkMovie(movieId);
+		if(!responseDTO.isSuccess()) return responseDTO;
+
+		Movie movie = getMovie(movieId);
+		if(showRepository.existsByIdAndMovie(showId, movie)) {
+			return new ResponseDTO(true, "");
+		}
+		return new ResponseDTO(false, "invalid show id");
+	}
+
 	public Show getShow(int showId) {
 		return showRepository.findById(showId).get();
 	}

@@ -14,6 +14,7 @@ public class ShowResponseDTO {
 	private final Date startTime;
 	private final Date endTime;
 	private final MovieResponseDTO movie;
+	private final AudiResponseDTO audi;
 	private final List<ShowSeatDTO> showSeats;
 
 	public ShowResponseDTO(Show show) {
@@ -22,6 +23,7 @@ public class ShowResponseDTO {
 		this.startTime = show.getStartTime();
 		this.endTime = show.getEndTime();
 		this.movie = new MovieResponseDTO(show.getMovie());
+		this.audi = new AudiResponseDTO(show.getAudi(), show.getShowSeats().size());
 		this.showSeats = show.getShowSeats()
 		                     .stream()
 		                     .map(ShowSeatDTO::new)

@@ -10,6 +10,4 @@ import java.util.List;
 @Repository
 public interface ShowSeatRepository extends CrudRepository<ShowSeat, Integer> {
 	List<ShowSeat> findByShow(Show show);
-
-//	void deleteAllByShow(Show show);
 }

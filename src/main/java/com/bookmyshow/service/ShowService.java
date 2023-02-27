@@ -51,6 +51,25 @@ public class ShowService {
 		return new ShowResponseDTO(show);
 	}
 
+	public List<ShowResponseDTO> getAllShows(int movieId) {
+		ResponseDTO responseDTO = showUtil.checkMovie(movieId);
+		if(!responseDTO.isSuccess()) return Collections.emptyList();
+
+		Movie movie = showUtil.getMovie(movieId);
+		return showRepository.findByMovie(movie)
+		                     .stream()
+		                     .map(ShowResponseDTO::new)
+		                     .collect(Collectors.toList());
+	}
+
+	public ShowResponseDTO getShow(int movieId, int showId) {
+		ResponseDTO responseDTO = showUtil.checkShow(movieId, showId);
+		if(!responseDTO.isSuccess()) return null;
+
+		Show show = showUtil.getShow(showId);
+		return new ShowResponseDTO(show);
+	}
+
 	public ResponseDTO addShow(int theatreId, int audiNo, ShowRequestDTO showRequestDTO) {
 		ResponseDTO responseDTO = showUtil.canAdd(theatreId, audiNo, showRequestDTO.getDate(),
 				showRequestDTO.getStartTime(), showRequestDTO.getEndTime(), showRequestDTO.getMovieId());
