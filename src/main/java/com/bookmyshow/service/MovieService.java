@@ -4,7 +4,6 @@ import com.bookmyshow.dto.MovieRequestDTO;
 import com.bookmyshow.dto.MovieResponseDTO;
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.model.Movie;
-import com.bookmyshow.model.enums.Genre;
 import com.bookmyshow.repository.ActorRepository;
 import com.bookmyshow.repository.MovieRepository;
 import com.bookmyshow.util.MovieUtil;
@@ -48,43 +47,39 @@ public class MovieService {
 	}
 
 	public MovieResponseDTO getMovie(int movieId) {
-		Optional<Movie> movie = movieRepository.findById(movieId);
-		return movie.map(MovieResponseDTO::new)
-		            .orElse(null);
+		ResponseDTO responseDTO = movieUtil.checkMovie(movieId);
+		if(!responseDTO.isSuccess()) return null;
+
+		Movie movie = movieUtil.getMovie(movieId);
+		return new MovieResponseDTO(movie);
 	}
 
 	public ResponseDTO addMovie(MovieRequestDTO movieRequestDTO) {
-		if(movieUtil.isGenreValid(movieRequestDTO.getGenre())) {
-			Movie movie = new Movie();
-			movieUtil.mapMovieRequestToMovie(movieRequestDTO, movie);
-			movieRepository.save(movie);
-			return new ResponseDTO(true, String.format("movie %s added successfully", movie.getTitle()));
-		}
-		return new ResponseDTO(false, String.format("invalid Genre type, select genre from %s",
-				Arrays.toString(Genre.class.getEnumConstants())));
+		ResponseDTO responseDTO = movieUtil.canAdd(movieRequestDTO.getGenre());
+		if(!responseDTO.isSuccess()) return responseDTO;
+
+		Movie movie = new Movie();
+		movieUtil.mapMovieRequestToMovie(movieRequestDTO, movie);
+		movieRepository.save(movie);
+		return new ResponseDTO(true, String.format("movie %s added successfully", movie.getTitle()));
 	}
 
 	public ResponseDTO updateMovie(int movieId, MovieRequestDTO movieRequestDTO) {
-		if(movieUtil.isGenreValid(movieRequestDTO.getGenre())) {
-			Optional<Movie> movieOptional = movieRepository.findById(movieId);
-			if (movieOptional.isPresent()) {
-				Movie movie = movieOptional.get();
-				movieUtil.mapMovieRequestToMovie(movieRequestDTO, movie);
-				movieRepository.save(movie);
-				return new ResponseDTO(true, String.format("movie %s updated successfully", movie.getTitle()));
-			}
-			return new ResponseDTO(false, "invalid movie id");
-		}
-		return new ResponseDTO(false, String.format("invalid Genre type, select genre from %s",
-				Arrays.toString(Genre.class.getEnumConstants())));
+		ResponseDTO responseDTO = movieUtil.canUpdate(movieId, movieRequestDTO.getGenre());
+		if(!responseDTO.isSuccess()) return responseDTO;
+
+		Movie movie = movieUtil.getMovie(movieId);
+		movieUtil.mapMovieRequestToMovie(movieRequestDTO, movie);
+		movieRepository.save(movie);
+		return new ResponseDTO(true, String.format("movie %s updated successfully", movie.getTitle()));
 	}
 
 	public ResponseDTO deleteMovie(int movieId) {
-		if(movieRepository.existsById(movieId)) {
-			Movie movie = movieRepository.findById(movieId).get();
-			movieRepository.delete(movie);
-			return new ResponseDTO(true, String.format("movie %s deleted successfully", movie.getTitle()));
-		}
-		return new ResponseDTO(false, "invalid movie id");
+		ResponseDTO responseDTO = movieUtil.canDelete(movieId);
+		if(!responseDTO.isSuccess()) return responseDTO;
+
+		Movie movie = movieUtil.getMovie(movieId);
+		movieRepository.delete(movie);
+		return new ResponseDTO(true, String.format("movie %s deleted successfully", movie.getTitle()));
 	}
 }

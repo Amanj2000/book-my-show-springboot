@@ -2,10 +2,12 @@ package com.bookmyshow.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
 public class ResponseDTO {
-	private final boolean success;
-	private final String message;
+	private boolean success;
+	private String message;
 }

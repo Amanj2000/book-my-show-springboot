@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TheatreService {
@@ -30,9 +29,11 @@ public class TheatreService {
 	}
 
 	public TheatreResponseDTO getTheatre(int theatreId) {
-		Optional<Theatre> theatre = theatreRepository.findById(theatreId);
-		return theatre.map(TheatreResponseDTO::new)
-		              .orElse(null);
+		ResponseDTO responseDTO = theatreUtil.checkTheatre(theatreId);
+		if(!responseDTO.isSuccess()) return null;
+
+		Theatre theatre = theatreUtil.getTheatre(theatreId);
+		return new TheatreResponseDTO(theatre);
 	}
 
 	public ResponseDTO addTheatre(TheatreRequestDTO theatreRequestDTO) {
@@ -43,22 +44,23 @@ public class TheatreService {
 	}
 
 	public ResponseDTO updateTheatre(int theatreId, TheatreRequestDTO theatreRequestDTO) {
-		Optional<Theatre> theatreOptional = theatreRepository.findById(theatreId);
-		if (theatreOptional.isPresent()) {
-			Theatre theatre = theatreOptional.get();
-			theatreUtil.mapTheatreRequestToTheatre(theatreRequestDTO, theatre);
-			theatreRepository.save(theatre);
-			return new ResponseDTO(true, String.format("theatre %s updated successfully", theatre.getName()));
-		}
-		return new ResponseDTO(false, "invalid theatre id");
+		ResponseDTO responseDTO = theatreUtil.canUpdate(theatreId);
+		if(!responseDTO.isSuccess()) return responseDTO;
+
+		Theatre theatre = theatreUtil.getTheatre(theatreId);
+		theatreUtil.mapTheatreRequestToTheatre(theatreRequestDTO, theatre);
+		theatreRepository.save(theatre);
+
+		return new ResponseDTO(true, String.format("theatre %s updated successfully", theatre.getName()));
 	}
 
 	public ResponseDTO deleteTheatre(int theatreId) {
-		if(theatreRepository.existsById(theatreId)) {
-			Theatre theatre = theatreRepository.findById(theatreId).get();
-			theatreRepository.delete(theatre);
-			return new ResponseDTO(true, String.format("theatre %s deleted successfully", theatre.getName()));
-		}
-		return new ResponseDTO(false, "invalid theatre id");
+		ResponseDTO responseDTO = theatreUtil.canDelete(theatreId);
+		if(!responseDTO.isSuccess()) return responseDTO;
+
+		Theatre theatre = theatreUtil.getTheatre(theatreId);
+		theatreRepository.delete(theatre);
+
+		return new ResponseDTO(true, String.format("theatre %s deleted successfully", theatre.getName()));
 	}
 }

@@ -13,4 +13,6 @@ public interface AudiRepository extends CrudRepository<Audi, Integer> {
 	List<Audi> findByTheatre(Theatre theatre);
 
 	Optional<Audi> findByAudiNoAndTheatre(int audiNo, Theatre theatre);
+
+	boolean existsByAudiNoAndTheatre(int audiNo, Theatre theatre);
 }

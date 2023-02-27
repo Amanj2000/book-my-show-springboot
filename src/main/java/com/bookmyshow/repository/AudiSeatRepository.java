@@ -14,5 +14,7 @@ public interface AudiSeatRepository extends CrudRepository<AudiSeat, Integer> {
 
 	Optional<AudiSeat> findByAudiAndSeatNo(Audi audi, String seatNo);
 
+	boolean existsByAudiAndSeatNo(Audi audi, String seatNo);
+
 	int countByAudi(Audi audi);
 }
