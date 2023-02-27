@@ -2,7 +2,9 @@ package com.bookmyshow;
 
 import com.bookmyshow.model.*;
 import com.bookmyshow.model.enums.Genre;
+import com.bookmyshow.model.enums.SeatType;
 import com.bookmyshow.repository.AudiRepository;
+import com.bookmyshow.repository.AudiSeatRepository;
 import com.bookmyshow.repository.MovieRepository;
 import com.bookmyshow.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -11,7 +13,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @SpringBootApplication
 public class BookMyShowApplication {
@@ -22,12 +26,12 @@ public class BookMyShowApplication {
 
 	@Bean
 	CommandLineRunner commandLineRunner(UserRepository userRepository, PasswordEncoder passwordEncoder,
-	                                    MovieRepository movieRepository,
-	                                    AudiRepository audiRepository) {
+	                                    MovieRepository movieRepository, AudiRepository audiRepository,
+	                                    AudiSeatRepository audiSeatRepository) {
 		return args -> {
 			saveUsers(userRepository, passwordEncoder);
 			saveMovies(movieRepository);
-			saveAudis(audiRepository);
+			saveAudiSeats(audiRepository, audiSeatRepository);
 		};
 	}
 
@@ -101,7 +105,7 @@ public class BookMyShowApplication {
 	}
 
 	@SuppressWarnings("SpellCheckingInspection")
-	private void saveAudis(AudiRepository audiRepository) {
+	private void saveAudiSeats(AudiRepository audiRepository, AudiSeatRepository audiSeatRepository) {
 		City bangalore = new City("Bangalore", "Karnataka");
 		City agra = new City("Agra", "Uttar Pradesh");
 
@@ -121,6 +125,26 @@ public class BookMyShowApplication {
 
 		audiRepository.saveAll(Arrays.asList(audiPvr1, audiPvr2, audiCinepolis1, audiCinepolis2, audiSanjay1,
 				audiSanjay2, audiSarv1, audiSarv2));
+
+		audiSeatRepository.saveAll(getAudiSeats(audiPvr1));
+		audiSeatRepository.saveAll(getAudiSeats(audiPvr2));
+		audiSeatRepository.saveAll(getAudiSeats(audiCinepolis1));
+		audiSeatRepository.saveAll(getAudiSeats(audiCinepolis2));
+		audiSeatRepository.saveAll(getAudiSeats(audiSanjay1));
+		audiSeatRepository.saveAll(getAudiSeats(audiSanjay2));
+		audiSeatRepository.saveAll(getAudiSeats(audiSarv1));
+		audiSeatRepository.saveAll(getAudiSeats(audiSarv2));
+	}
+
+	private List<AudiSeat> getAudiSeats(Audi audi) {
+		List<AudiSeat> audiSeats = new ArrayList<>();
+		audiSeats.add(new AudiSeat("A1", SeatType.SILVER, audi));
+		audiSeats.add(new AudiSeat("A2", SeatType.SILVER, audi));
+		audiSeats.add(new AudiSeat("B1", SeatType.GOLD, audi));
+		audiSeats.add(new AudiSeat("B2", SeatType.GOLD, audi));
+		audiSeats.add(new AudiSeat("C1", SeatType.RECLINER, audi));
+		audiSeats.add(new AudiSeat("C2", SeatType.RECLINER, audi));
+		return audiSeats;
 	}
 }
 

@@ -10,9 +10,9 @@ public class AudiResponseDTO {
 	private final String theatre;
 	private final String city;
 
-	public AudiResponseDTO(Audi audi) {
+	public AudiResponseDTO(Audi audi, int noOfSeats) {
 		this.audiNo = audi.getAudiNo();
-		this.noOfSeats = audi.getNoOfSeats();
+		this.noOfSeats = noOfSeats;
 		this.theatre = audi.getTheatre().getName();
 		this.city = audi.getTheatre().getCity().getName();
 	}

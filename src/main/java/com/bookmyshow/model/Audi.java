@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.Constraint;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +18,6 @@ public class Audi {
 
 	@Column(nullable = false)
 	private Integer audiNo;
-
-	@Column(nullable = false)
-	private Integer noOfSeats = 0;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, optional = false)
 	@JoinColumn(name = "theatre_id", nullable = false)

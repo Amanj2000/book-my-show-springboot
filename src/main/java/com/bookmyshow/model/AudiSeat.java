@@ -19,9 +19,10 @@ public class AudiSeat {
 	private String seatNo;
 
 	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	private SeatType seatType;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, optional = false)
 	@JoinColumn(name = "audi_id", nullable = false)
 	private Audi audi;
 

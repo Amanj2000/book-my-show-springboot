@@ -2,7 +2,6 @@ package com.bookmyshow.controller;
 
 import com.bookmyshow.dto.AudiRequestDTO;
 import com.bookmyshow.dto.AudiResponseDTO;
-import com.bookmyshow.dto.MovieRequestDTO;
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.service.AudiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ public class AudiController {
 	@PostMapping
 	public ResponseDTO addAudi(@PathVariable int theatreId,
 	                           @Valid @RequestBody AudiRequestDTO audiRequestDTO) {
-		System.out.printf("Theatre Id: %d\n", theatreId);
 		return audiService.addAudi(theatreId, audiRequestDTO);
 	}
 

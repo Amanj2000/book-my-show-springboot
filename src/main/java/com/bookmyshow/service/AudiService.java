@@ -6,6 +6,7 @@ import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.model.Audi;
 import com.bookmyshow.model.Theatre;
 import com.bookmyshow.repository.AudiRepository;
+import com.bookmyshow.repository.AudiSeatRepository;
 import com.bookmyshow.repository.TheatreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,29 +25,31 @@ public class AudiService {
 	@Autowired
 	TheatreRepository theatreRepository;
 
+	@Autowired
+	AudiSeatRepository audiSeatRepository;
+
 	public List<AudiResponseDTO> getAllAudis(int theatreId) {
-		if(theatreRepository.existsById(theatreId)) {
-			return audiRepository.findByTheatre(theatreRepository.findById(theatreId).get())
-			                     .stream()
-			                     .map(AudiResponseDTO::new)
-			                     .collect(Collectors.toList());
-		}
-		return Collections.emptyList();
+		Optional<Theatre> theatreOptional = theatreRepository.findById(theatreId);
+		return theatreOptional.map(theatre -> audiRepository.findByTheatre(theatre)
+		                                                    .stream()
+		                                                    .map(audi -> new AudiResponseDTO(audi,
+																		audiSeatRepository.countByAudi(audi)))
+		                                                    .collect(Collectors.toList()))
+		                      .orElse(Collections.emptyList());
 	}
 
 	public AudiResponseDTO getAudi(int theatreId, int audiNo) {
-		if(theatreRepository.existsById(theatreId)) {
-			Theatre theatre = theatreRepository.findById(theatreId).get();
-			Optional<Audi> audiOptional = audiRepository.findByAudiNoAndTheatre(audiNo, theatre);
-			return audiOptional.map(AudiResponseDTO::new)
-			                   .orElse(null);
-		}
-		return null;
+		Optional<Theatre> theatreOptional = theatreRepository.findById(theatreId);
+		return theatreOptional.flatMap(theatre -> audiRepository.findByAudiNoAndTheatre(audiNo, theatre)
+		                                                        .map(audi -> new AudiResponseDTO(audi,
+				                                                        audiSeatRepository.countByAudi(audi))))
+		                      .orElse(null);
 	}
 
 	public ResponseDTO addAudi(int theatreId, AudiRequestDTO audiRequestDTO) {
-		if(theatreRepository.existsById(theatreId)) {
-			Theatre theatre = theatreRepository.findById(theatreId).get();
+		Optional<Theatre> theatreOptional = theatreRepository.findById(theatreId);
+		if(theatreOptional.isPresent()) {
+			Theatre theatre = theatreOptional.get();
 			Optional<Audi> audiOptional = audiRepository.findByAudiNoAndTheatre(audiRequestDTO.getAudiNo(), theatre);
 			if(audiOptional.isPresent()) {
 				return new ResponseDTO(false, String.format("audi with no. %d already exists.",
@@ -54,7 +57,7 @@ public class AudiService {
 			}
 			Audi audi = new Audi();
 			audi.setAudiNo(audiRequestDTO.getAudiNo());
-			audi.setTheatre(theatreRepository.findById(theatreId).get());
+			audi.setTheatre(theatre);
 			audiRepository.save(audi);
 			return new ResponseDTO(true, String.format("audi %d added successfully", audi.getAudiNo()));
 		}
@@ -62,15 +65,15 @@ public class AudiService {
 	}
 
 	public ResponseDTO updateAudi(int theatreId, int audiNo, AudiRequestDTO audiRequestDTO) {
-		if(theatreRepository.existsById(theatreId)) {
-			Theatre theatre = theatreRepository.findById(theatreId).get();
+		Optional<Theatre> theatreOptional = theatreRepository.findById(theatreId);
+		if(theatreOptional.isPresent()) {
+			Theatre theatre = theatreOptional.get();
 			Optional<Audi> audiOptional = audiRepository.findByAudiNoAndTheatre(audiNo, theatre);
 			if(audiOptional.isPresent()) {
 				Audi audi =  audiOptional.get();
 				audiOptional = audiRepository.findByAudiNoAndTheatre(audiRequestDTO.getAudiNo(), theatre);
-				if(audiOptional.isPresent()) {
-					return new ResponseDTO(false, String.format("audi with no. %d already exists.",
-							audiRequestDTO.getAudiNo()));
+				if(audiOptional.isPresent() && !audiOptional.get().getId().equals(audi.getId())) {
+					return new ResponseDTO(false, String.format("audi with no. %d already exists.", audiNo));
 				}
 				audi.setAudiNo(audiRequestDTO.getAudiNo());
 				audiRepository.save(audi);
@@ -82,8 +85,9 @@ public class AudiService {
 	}
 
 	public ResponseDTO deleteAudi(int theatreId, int audiNo) {
-		if(theatreRepository.existsById(theatreId)) {
-			Theatre theatre = theatreRepository.findById(theatreId).get();
+		Optional<Theatre> theatreOptional = theatreRepository.findById(theatreId);
+		if(theatreOptional.isPresent()) {
+			Theatre theatre = theatreOptional.get();
 			Optional<Audi> audiOptional = audiRepository.findByAudiNoAndTheatre(audiNo, theatre);
 			if(audiOptional.isPresent()) {
 				audiRepository.delete(audiOptional.get());
