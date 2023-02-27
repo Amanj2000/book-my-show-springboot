@@ -23,7 +23,7 @@ public class Audi {
 	@JoinColumn(name = "theatre_id", nullable = false)
 	private Theatre theatre;
 
-	@OneToMany(mappedBy = "audi", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "audi", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private List<Show> shows = new ArrayList<>();
 
 	public Audi(Integer audiNo, Theatre theatre) {

@@ -19,7 +19,7 @@ public class ShowSeat {
 	private Integer price;
 
 	@Column(nullable = false)
-	private SeatStatus seatStatus;
+	private SeatStatus seatStatus = SeatStatus.Available;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, optional = false)
 	@JoinColumn(name = "show_id", nullable = false)
@@ -35,11 +35,9 @@ public class ShowSeat {
 	           inverseJoinColumns = @JoinColumn(name = "booking_id"))
 	private Booking booking;
 
-	public ShowSeat(Integer price, SeatStatus seatStatus, Show show, AudiSeat audiSeat, Booking booking) {
+	public ShowSeat(Integer price, Show show, AudiSeat audiSeat) {
 		this.price = price;
-		this.seatStatus = seatStatus;
 		this.show = show;
 		this.audiSeat = audiSeat;
-		this.booking = booking;
 	}
 }

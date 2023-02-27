@@ -38,7 +38,7 @@ public class Show {
 	@JoinColumn(name = "audi_id", nullable = false)
 	private Audi audi;
 
-	@OneToMany(mappedBy = "show", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "show", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private List<ShowSeat> showSeats = new ArrayList<>();
 
 	public Show(Date date, Date startTime, Date endTime, Movie movie, Audi audi) {
