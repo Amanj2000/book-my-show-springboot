@@ -19,6 +19,7 @@ public class ShowSeat {
 	private Integer price;
 
 	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	private SeatStatus seatStatus = SeatStatus.Available;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, optional = false)
