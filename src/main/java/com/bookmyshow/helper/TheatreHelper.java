@@ -1,4 +1,4 @@
-package com.bookmyshow.util;
+package com.bookmyshow.helper;
 
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.dto.TheatreRequestDTO;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class TheatreUtil {
+public class TheatreHelper {
 
 	@Autowired
 	CityRepository cityRepository;

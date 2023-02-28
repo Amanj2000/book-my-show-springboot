@@ -5,7 +5,7 @@ import com.bookmyshow.dto.TheatreRequestDTO;
 import com.bookmyshow.dto.TheatreResponseDTO;
 import com.bookmyshow.model.Theatre;
 import com.bookmyshow.repository.TheatreRepository;
-import com.bookmyshow.util.TheatreUtil;
+import com.bookmyshow.helper.TheatreHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class TheatreService {
 	TheatreRepository theatreRepository;
 
 	@Autowired
-	TheatreUtil theatreUtil;
+	TheatreHelper theatreHelper;
 
 	public List<TheatreResponseDTO> getAllTheatres() {
 		List<TheatreResponseDTO> theatres = new ArrayList<>();
@@ -29,36 +29,36 @@ public class TheatreService {
 	}
 
 	public TheatreResponseDTO getTheatre(int theatreId) {
-		ResponseDTO responseDTO = theatreUtil.checkTheatre(theatreId);
+		ResponseDTO responseDTO = theatreHelper.checkTheatre(theatreId);
 		if(!responseDTO.isSuccess()) return null;
 
-		Theatre theatre = theatreUtil.getTheatre(theatreId);
+		Theatre theatre = theatreHelper.getTheatre(theatreId);
 		return new TheatreResponseDTO(theatre);
 	}
 
 	public ResponseDTO addTheatre(TheatreRequestDTO theatreRequestDTO) {
 		Theatre theatre = new Theatre();
-		theatreUtil.mapTheatreRequestToTheatre(theatreRequestDTO, theatre);
+		theatreHelper.mapTheatreRequestToTheatre(theatreRequestDTO, theatre);
 		theatreRepository.save(theatre);
 		return new ResponseDTO(true, String.format("theatre %s saved successfully", theatre.getName()));
 	}
 
 	public ResponseDTO updateTheatre(int theatreId, TheatreRequestDTO theatreRequestDTO) {
-		ResponseDTO responseDTO = theatreUtil.canUpdate(theatreId);
+		ResponseDTO responseDTO = theatreHelper.canUpdate(theatreId);
 		if(!responseDTO.isSuccess()) return responseDTO;
 
-		Theatre theatre = theatreUtil.getTheatre(theatreId);
-		theatreUtil.mapTheatreRequestToTheatre(theatreRequestDTO, theatre);
+		Theatre theatre = theatreHelper.getTheatre(theatreId);
+		theatreHelper.mapTheatreRequestToTheatre(theatreRequestDTO, theatre);
 		theatreRepository.save(theatre);
 
 		return new ResponseDTO(true, String.format("theatre %s updated successfully", theatre.getName()));
 	}
 
 	public ResponseDTO deleteTheatre(int theatreId) {
-		ResponseDTO responseDTO = theatreUtil.canDelete(theatreId);
+		ResponseDTO responseDTO = theatreHelper.canDelete(theatreId);
 		if(!responseDTO.isSuccess()) return responseDTO;
 
-		Theatre theatre = theatreUtil.getTheatre(theatreId);
+		Theatre theatre = theatreHelper.getTheatre(theatreId);
 		theatreRepository.delete(theatre);
 
 		return new ResponseDTO(true, String.format("theatre %s deleted successfully", theatre.getName()));

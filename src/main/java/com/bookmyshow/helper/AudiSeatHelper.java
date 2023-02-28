@@ -1,4 +1,4 @@
-package com.bookmyshow.util;
+package com.bookmyshow.helper;
 
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.model.Audi;
@@ -12,19 +12,19 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @Component
-public class AudiSeatUtil {
+public class AudiSeatHelper {
 	@Autowired
 	AudiSeatRepository audiSeatRepository;
 
 	@Autowired
-	AudiUtil audiUtil;
+	AudiHelper audiHelper;
 
 	public ResponseDTO checkAudi(int theatreId, int audiNo) {
-		return audiUtil.checkAudi(theatreId, audiNo);
+		return audiHelper.checkAudi(theatreId, audiNo);
 	}
 
 	public Audi getAudi(int theatreId, int audiNo) {
-		return audiUtil.getAudi(theatreId, audiNo);
+		return audiHelper.getAudi(theatreId, audiNo);
 	}
 
 	public ResponseDTO checkAudiSeat(int theatreId, int audiNo, String seatNo) {

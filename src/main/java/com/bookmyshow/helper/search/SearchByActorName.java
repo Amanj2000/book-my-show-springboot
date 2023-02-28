@@ -1,4 +1,4 @@
-package com.bookmyshow.util.search;
+package com.bookmyshow.helper.search;
 
 import com.bookmyshow.model.Movie;
 import com.bookmyshow.repository.ActorRepository;

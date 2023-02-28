@@ -1,4 +1,4 @@
-package com.bookmyshow.util;
+package com.bookmyshow.helper;
 
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.model.Show;
@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class BookingUtil {
+public class BookingHelper {
 	@Autowired
 	UserRepository userRepository;
 
@@ -23,18 +23,18 @@ public class BookingUtil {
 	BookingRepository bookingRepository;
 
 	@Autowired
-	ShowUtil showUtil;
+	ShowHelper showHelper;
 
 	public User getUser(String email) {
 		return userRepository.findByEmail(email).get();
 	}
 
 	public ResponseDTO checkShow(int movieId, int showId) {
-		return showUtil.checkShow(movieId, showId);
+		return showHelper.checkShow(movieId, showId);
 	}
 
 	public Show getShow(int showId) {
-		return showUtil.getShow(showId);
+		return showHelper.getShow(showId);
 	}
 
 	public ResponseDTO checkSeats(Show show, List<String> seatNos) {

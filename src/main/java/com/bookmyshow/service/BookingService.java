@@ -10,7 +10,7 @@ import com.bookmyshow.model.User;
 import com.bookmyshow.model.enums.SeatStatus;
 import com.bookmyshow.repository.BookingRepository;
 import com.bookmyshow.repository.ShowSeatRepository;
-import com.bookmyshow.util.BookingUtil;
+import com.bookmyshow.helper.BookingHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +27,10 @@ public class BookingService {
 	ShowSeatRepository showSeatRepository;
 
 	@Autowired
-	BookingUtil bookingUtil;
+	BookingHelper bookingHelper;
 
 	public List<BookingResponseDTO> getAllBookings(String email) {
-		User user = bookingUtil.getUser(email);
+		User user = bookingHelper.getUser(email);
 		return bookingRepository.findByUser(user)
 		                        .stream()
 		                        .map(BookingResponseDTO::new)
@@ -38,25 +38,25 @@ public class BookingService {
 	}
 
 	public BookingResponseDTO getBooking(String email, int bookingId) {
-		User user = bookingUtil.getUser(email);
+		User user = bookingHelper.getUser(email);
 		return bookingRepository.findByIdAndUser(bookingId, user)
 		                        .map(BookingResponseDTO::new)
 		                        .orElse(null);
 	}
 
 	public ResponseDTO bookShow(String email, int movieId, int showId, BookingRequestDTO bookingRequestDTO) {
-		ResponseDTO responseDTO = bookingUtil.canBook(movieId, showId, bookingRequestDTO.getSeatNos());
+		ResponseDTO responseDTO = bookingHelper.canBook(movieId, showId, bookingRequestDTO.getSeatNos());
 		if(!responseDTO.isSuccess()) return responseDTO;
 
-		User user = bookingUtil.getUser(email);
-		Show show = bookingUtil.getShow(showId);
+		User user = bookingHelper.getUser(email);
+		Show show = bookingHelper.getShow(showId);
 
 		Booking booking = new Booking();
 		booking.setUser(user);
 		booking.setShow(show);
 		booking.setBookingTime(new Date());
 		booking.setNoOfSeats(bookingRequestDTO.getSeatNos().size());
-		booking.setTotalPrice(bookingUtil.calcTotalPrice(show, booking.getNoOfSeats()));
+		booking.setTotalPrice(bookingHelper.calcTotalPrice(show, booking.getNoOfSeats()));
 		booking.setShowSeats(bookingRequestDTO.getSeatNos()
 		                                      .stream()
 		                                      .map(seatNo -> {
@@ -72,7 +72,7 @@ public class BookingService {
 	}
 
 	public ResponseDTO cancelBooking(String email, int bookingId) {
-		ResponseDTO responseDTO = bookingUtil.canCancel(email, bookingId);
+		ResponseDTO responseDTO = bookingHelper.canCancel(email, bookingId);
 		if(!responseDTO.isSuccess()) return responseDTO;
 
 		Booking booking = bookingRepository.findById(bookingId).get();

@@ -10,7 +10,7 @@ import com.bookmyshow.model.ShowSeat;
 import com.bookmyshow.repository.AudiSeatRepository;
 import com.bookmyshow.repository.ShowRepository;
 import com.bookmyshow.repository.ShowSeatRepository;
-import com.bookmyshow.util.ShowUtil;
+import com.bookmyshow.helper.ShowHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,13 +30,13 @@ public class ShowService {
 	AudiSeatRepository audiSeatRepository;
 
 	@Autowired
-	ShowUtil showUtil;
+	ShowHelper showHelper;
 
 	public List<ShowResponseDTO> getAllShows(int theatreId, int audiNo) {
-		ResponseDTO responseDTO = showUtil.checkAudi(theatreId, audiNo);
+		ResponseDTO responseDTO = showHelper.checkAudi(theatreId, audiNo);
 		if(!responseDTO.isSuccess()) return Collections.emptyList();
 
-		Audi audi = showUtil.getAudi(theatreId, audiNo);
+		Audi audi = showHelper.getAudi(theatreId, audiNo);
 		return showRepository.findByAudi(audi)
 		                     .stream()
 		                     .map(ShowResponseDTO::new)
@@ -44,18 +44,18 @@ public class ShowService {
 	}
 
 	public ShowResponseDTO getShow(int theatreId, int audiNo, int showId) {
-		ResponseDTO responseDTO = showUtil.checkShow(theatreId, audiNo, showId);
+		ResponseDTO responseDTO = showHelper.checkShow(theatreId, audiNo, showId);
 		if(!responseDTO.isSuccess()) return null;
 
-		Show show = showUtil.getShow(showId);
+		Show show = showHelper.getShow(showId);
 		return new ShowResponseDTO(show);
 	}
 
 	public List<ShowResponseDTO> getAllShows(int movieId) {
-		ResponseDTO responseDTO = showUtil.checkMovie(movieId);
+		ResponseDTO responseDTO = showHelper.checkMovie(movieId);
 		if(!responseDTO.isSuccess()) return Collections.emptyList();
 
-		Movie movie = showUtil.getMovie(movieId);
+		Movie movie = showHelper.getMovie(movieId);
 		return showRepository.findByMovie(movie)
 		                     .stream()
 		                     .map(ShowResponseDTO::new)
@@ -63,20 +63,20 @@ public class ShowService {
 	}
 
 	public ShowResponseDTO getShow(int movieId, int showId) {
-		ResponseDTO responseDTO = showUtil.checkShow(movieId, showId);
+		ResponseDTO responseDTO = showHelper.checkShow(movieId, showId);
 		if(!responseDTO.isSuccess()) return null;
 
-		Show show = showUtil.getShow(showId);
+		Show show = showHelper.getShow(showId);
 		return new ShowResponseDTO(show);
 	}
 
 	public ResponseDTO addShow(int theatreId, int audiNo, ShowRequestDTO showRequestDTO) {
-		ResponseDTO responseDTO = showUtil.canAdd(theatreId, audiNo, showRequestDTO.getDate(),
+		ResponseDTO responseDTO = showHelper.canAdd(theatreId, audiNo, showRequestDTO.getDate(),
 				showRequestDTO.getStartTime(), showRequestDTO.getEndTime(), showRequestDTO.getMovieId());
 		if(!responseDTO.isSuccess()) return responseDTO;
 
-		Audi audi = showUtil.getAudi(theatreId, audiNo);
-		Movie movie = showUtil.getMovie(showRequestDTO.getMovieId());
+		Audi audi = showHelper.getAudi(theatreId, audiNo);
+		Movie movie = showHelper.getMovie(showRequestDTO.getMovieId());
 
 		Show show = new Show();
 		show.setDate(showRequestDTO.getDate());
@@ -94,13 +94,13 @@ public class ShowService {
 	}
 
 	public ResponseDTO updateShow(int theatreId, int audiNo, int showId, ShowRequestDTO showRequestDTO) {
-		ResponseDTO responseDTO = showUtil.canUpdate(theatreId, audiNo, showId, showRequestDTO.getDate(),
+		ResponseDTO responseDTO = showHelper.canUpdate(theatreId, audiNo, showId, showRequestDTO.getDate(),
 				showRequestDTO.getStartTime(), showRequestDTO.getEndTime(), showRequestDTO.getMovieId());
 		if(!responseDTO.isSuccess()) return responseDTO;
 
-		Movie movie = showUtil.getMovie(showRequestDTO.getMovieId());
+		Movie movie = showHelper.getMovie(showRequestDTO.getMovieId());
 
-		Show show = showUtil.getShow(showId);
+		Show show = showHelper.getShow(showId);
 		show.setDate(showRequestDTO.getDate());
 		show.setStartTime(showRequestDTO.getStartTime());
 		show.setEndTime(showRequestDTO.getEndTime());
@@ -115,10 +115,10 @@ public class ShowService {
 	}
 
 	public ResponseDTO deleteShow(int theatreId, int audiNo, int showId) {
-		ResponseDTO responseDTO = showUtil.canDelete(theatreId, audiNo, showId);
+		ResponseDTO responseDTO = showHelper.canDelete(theatreId, audiNo, showId);
 		if(!responseDTO.isSuccess()) return responseDTO;
 
-		Show show = showUtil.getShow(showId);
+		Show show = showHelper.getShow(showId);
 		showSeatRepository.deleteAll(showSeatRepository.findByShow(show));
 		showRepository.delete(show);
 

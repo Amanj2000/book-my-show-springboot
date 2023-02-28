@@ -2,7 +2,7 @@ package com.bookmyshow.service;
 
 import com.bookmyshow.dto.MovieResponseDTO;
 import com.bookmyshow.model.Movie;
-import com.bookmyshow.util.search.ISearchMovie;
+import com.bookmyshow.helper.search.ISearchMovie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

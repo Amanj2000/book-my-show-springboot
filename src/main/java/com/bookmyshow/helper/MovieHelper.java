@@ -1,4 +1,4 @@
-package com.bookmyshow.util;
+package com.bookmyshow.helper;
 
 import com.bookmyshow.dto.MovieRequestDTO;
 import com.bookmyshow.dto.MovieResponseDTO;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 
 @Component
-public class MovieUtil {
+public class MovieHelper {
 	@Autowired
 	MovieRepository movieRepository;
 

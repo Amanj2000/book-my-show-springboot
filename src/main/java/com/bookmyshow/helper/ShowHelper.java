@@ -1,4 +1,4 @@
-package com.bookmyshow.util;
+package com.bookmyshow.helper;
 
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.model.Audi;
@@ -11,30 +11,30 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class ShowUtil {
+public class ShowHelper {
 	@Autowired
 	ShowRepository showRepository;
 
 	@Autowired
-	MovieUtil movieUtil;
+	MovieHelper movieHelper;
 
 	@Autowired
-	AudiUtil audiUtil;
+	AudiHelper audiHelper;
 
 	public ResponseDTO checkMovie(int movieId) {
-		return movieUtil.checkMovie(movieId);
+		return movieHelper.checkMovie(movieId);
 	}
 
 	public Movie getMovie(int movieId) {
-		return movieUtil.getMovie(movieId);
+		return movieHelper.getMovie(movieId);
 	}
 
 	public ResponseDTO checkAudi(int theatreId, int audiNo) {
-		return audiUtil.checkAudi(theatreId, audiNo);
+		return audiHelper.checkAudi(theatreId, audiNo);
 	}
 
 	public Audi getAudi(int theatreId, int audiNo) {
-		return audiUtil.getAudi(theatreId, audiNo);
+		return audiHelper.getAudi(theatreId, audiNo);
 	}
 
 	public ResponseDTO checkShow(int theatreId, int audiNo, int showId) {

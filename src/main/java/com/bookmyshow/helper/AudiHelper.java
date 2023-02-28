@@ -1,4 +1,4 @@
-package com.bookmyshow.util;
+package com.bookmyshow.helper;
 
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.model.Audi;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class AudiUtil {
+public class AudiHelper {
 
 	@Autowired
 	AudiRepository audiRepository;
@@ -20,14 +20,14 @@ public class AudiUtil {
 	AudiSeatRepository audiSeatRepository;
 
 	@Autowired
-	TheatreUtil theatreUtil;
+	TheatreHelper theatreHelper;
 
 	public ResponseDTO checkTheatre(int theatreId) {
-		return theatreUtil.checkTheatre(theatreId);
+		return theatreHelper.checkTheatre(theatreId);
 	}
 
 	public Theatre getTheatre(int theatreId) {
-		return theatreUtil.getTheatre(theatreId);
+		return theatreHelper.getTheatre(theatreId);
 	}
 
 	public ResponseDTO checkAudi(int theatreId, int audiNo) {
