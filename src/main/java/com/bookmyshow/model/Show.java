@@ -23,11 +23,11 @@ public class Show {
 	private Date date;
 
 	@Column(nullable = false)
-	@Temporal(TemporalType.TIME)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date startTime;
 
 	@Column(nullable = false)
-	@Temporal(TemporalType.TIME)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date endTime;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, optional = false)

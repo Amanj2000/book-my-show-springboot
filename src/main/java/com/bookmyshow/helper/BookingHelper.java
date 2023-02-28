@@ -1,5 +1,6 @@
 package com.bookmyshow.helper;
 
+import com.bookmyshow.model.Booking;
 import com.bookmyshow.model.Show;
 import com.bookmyshow.model.User;
 import com.bookmyshow.model.enums.SeatStatus;
@@ -29,21 +30,18 @@ public class BookingHelper {
 		return userRepository.findByEmail(email).get();
 	}
 
-	public void checkShow(int movieId, int showId) {
-		showHelper.checkShow(movieId, showId);
+	public Show getShow(int movieId, int showId) {
+		return showHelper.getShow(movieId, showId);
 	}
 
-	public Show getShow(int showId) {
-		return showHelper.getShow(showId);
-	}
-
-	public void checkBooking(String email, int bookingId) {
+	public Booking getBooking(String email, int bookingId) {
 		User user = getUser(email);
 		if(!bookingRepository.findByIdAndUser(bookingId, user).isPresent())
 			throw new EntityNotFoundException("invalid booking id");
+		return bookingRepository.findById(bookingId).get();
 	}
 
-	public void checkSeats(Show show, List<String> seatNos) {
+	private void checkSeats(Show show, List<String> seatNos) {
 		Set<String> allShowSeatNos = show.getShowSeats()
 		                                 .stream()
 		                                 .map(showSeat -> showSeat.getAudiSeat().getSeatNo())
@@ -58,8 +56,7 @@ public class BookingHelper {
 	}
 
 	public void canBook(int movieId, int showId, List<String> seatNos) {
-		checkShow(movieId, showId);
-		Show show = getShow(showId);
+		Show show = getShow(movieId, showId);
 		checkSeats(show, seatNos);
 
 		Set<String> seatNoSet = new HashSet<>(seatNos);
@@ -78,9 +75,5 @@ public class BookingHelper {
 		int price = show.getShowSeats()
 		                .get(0).getPrice();
 		return price * noOfSeats;
-	}
-
-	public void canCancel(String email, int bookingId) {
-		checkBooking(email, bookingId);
 	}
 }

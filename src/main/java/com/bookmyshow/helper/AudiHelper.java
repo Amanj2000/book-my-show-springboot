@@ -22,23 +22,14 @@ public class AudiHelper {
 	@Autowired
 	TheatreHelper theatreHelper;
 
-	public void checkTheatre(int theatreId) {
-		theatreHelper.checkTheatre(theatreId);
-	}
-
 	public Theatre getTheatre(int theatreId) {
 		return theatreHelper.getTheatre(theatreId);
 	}
 
-	public void checkAudi(int theatreId, int audiNo) {
-		checkTheatre(theatreId);
+	public Audi getAudi(int theatreId, int audiNo) {
 		Theatre theatre = getTheatre(theatreId);
 		if(!audiRepository.existsByAudiNoAndTheatre(audiNo, theatre))
 			throw new EntityNotFoundException("invalid audi no");
-	}
-
-	public Audi getAudi(int theatreId, int audiNo) {
-		Theatre theatre = getTheatre(theatreId);
 		return audiRepository.findByAudiNoAndTheatre(audiNo, theatre).get();
 	}
 
@@ -47,24 +38,16 @@ public class AudiHelper {
 	}
 
 	public void canAdd(int theatreId, int newAudiNo) {
-		checkTheatre(theatreId);
 		Theatre theatre = getTheatre(theatreId);
-
 		if(audiRepository.existsByAudiNoAndTheatre(newAudiNo, theatre))
 			throw new IllegalArgumentException(String.format("audi with no. %d already exists.", newAudiNo));
 	}
 
 	public void canUpdate(int theatreId, int audiNo, int newAudiNo) {
-		checkAudi(theatreId, audiNo);
 		Theatre theatre = getTheatre(theatreId);
 		Audi audi = getAudi(theatreId, audiNo);
-
 		Optional<Audi> audiOptional = audiRepository.findByAudiNoAndTheatre(newAudiNo, theatre);
 		if(audiOptional.isPresent() && !audiOptional.get().getId().equals(audi.getId()))
 			throw new IllegalArgumentException(String.format("audi with no. %d already exists.", newAudiNo));
-	}
-
-	public void canDelete(int theatreId, int audiNo) {
-		checkAudi(theatreId, audiNo);
 	}
 }

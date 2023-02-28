@@ -50,16 +50,13 @@ public class MovieHelper {
 		           .collect(Collectors.toList());
 	}
 
-	public void checkMovie(int movieId) {
+	public Movie getMovie(int movieId) {
 		if(!movieRepository.existsById(movieId))
 			throw new EntityNotFoundException("invalid movie id");
-	}
-
-	public Movie getMovie(int movieId) {
 		return movieRepository.findById(movieId).get();
 	}
 
-	public void checkGenre(String genre) {
+	private void checkGenre(String genre) {
 		try {
 			Genre.valueOf(genre.toUpperCase());
 		} catch(IllegalArgumentException e) {
@@ -72,12 +69,7 @@ public class MovieHelper {
 		checkGenre(genre);
 	}
 
-	public void canUpdate(int movieId, String genre) {
-		checkMovie(movieId);
+	public void canUpdate(String genre) {
 		checkGenre(genre);
-	}
-
-	public void canDelete(int movieId) {
-		checkMovie(movieId);
 	}
 }

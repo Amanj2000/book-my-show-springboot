@@ -21,62 +21,40 @@ public class ShowHelper {
 	@Autowired
 	AudiHelper audiHelper;
 
-	public void checkMovie(int movieId) {
-		movieHelper.checkMovie(movieId);
-	}
-
 	public Movie getMovie(int movieId) {
 		return movieHelper.getMovie(movieId);
-	}
-
-	public void checkAudi(int theatreId, int audiNo) {
-		audiHelper.checkAudi(theatreId, audiNo);
 	}
 
 	public Audi getAudi(int theatreId, int audiNo) {
 		return audiHelper.getAudi(theatreId, audiNo);
 	}
 
-	public void checkShow(int theatreId, int audiNo, int showId) {
-		checkAudi(theatreId, audiNo);
-
+	public Show getShow(int theatreId, int audiNo, int showId) {
 		Audi audi = getAudi(theatreId, audiNo);
 		if(!showRepository.existsByIdAndAudi(showId, audi))
 			throw new EntityNotFoundException("invalid show id");
-	}
-
-	public void checkShow(int movieId, int showId) {
-		checkMovie(movieId);
-
-		Movie movie = getMovie(movieId);
-		if(!showRepository.existsByIdAndMovie(showId, movie))
-			throw new EntityNotFoundException("invalid show id");
-	}
-
-	public Show getShow(int showId) {
 		return showRepository.findById(showId).get();
 	}
 
-	public void checkTime(Date startTime, Date endTime) {
+	public Show getShow(int movieId, int showId) {
+		Movie movie = getMovie(movieId);
+		if(!showRepository.existsByIdAndMovie(showId, movie))
+			throw new EntityNotFoundException("invalid show id");
+		return showRepository.findById(showId).get();
+	}
+
+	private void checkTime(Date startTime, Date endTime) {
 		if(startTime.after(endTime))
 			throw new IllegalArgumentException("start time should be before end time");
 	}
 
-	public void canAdd(int theatreId, int audiNo, Date date, Date startTime, Date endTime, int movieId) {
-		checkAudi(theatreId, audiNo);
-		checkMovie(movieId);
+	public void canAdd(Date date, Date startTime, Date endTime) {
 		checkTime(startTime, endTime);
 		//TODO check overlapping time
 	}
 
-	public void canUpdate(int theatreId, int audiNo, int showId, Date date, Date startTime, Date endTime, int movieId) {
-		checkShow(theatreId, audiNo, showId);
-		checkMovie(movieId);
+	public void canUpdate(Date date, Date startTime, Date endTime) {
 		checkTime(startTime, endTime);
 		//TODO check overlapping time
-	}
-
-	public void canDelete(int theatreId, int audiNo, int showId) {
-		checkShow(theatreId, audiNo, showId);
 	}
 }

@@ -19,28 +19,18 @@ public class AudiSeatHelper {
 	@Autowired
 	AudiHelper audiHelper;
 
-	public void checkAudi(int theatreId, int audiNo) {
-		audiHelper.checkAudi(theatreId, audiNo);
-	}
-
 	public Audi getAudi(int theatreId, int audiNo) {
 		return audiHelper.getAudi(theatreId, audiNo);
 	}
 
-	public void checkAudiSeat(int theatreId, int audiNo, String seatNo) {
-		checkAudi(theatreId, audiNo);
-
+	public AudiSeat getAudiSeat(int theatreId, int audiNo, String seatNo) {
 		Audi audi = getAudi(theatreId, audiNo);
 		if(!audiSeatRepository.existsByAudiAndSeatNo(audi, seatNo))
 			throw new EntityNotFoundException("invalid seat no");
-	}
-
-	public AudiSeat getAudiSeat(int theatreId, int audiNo, String seatNo) {
-		Audi audi = getAudi(theatreId, audiNo);
 		return audiSeatRepository.findByAudiAndSeatNo(audi, seatNo).get();
 	}
 
-	public void checkSeatType(String seatType) {
+	private void checkSeatType(String seatType) {
 		try {
 			SeatType.valueOf(seatType.toUpperCase());
 		} catch(IllegalArgumentException e) {
@@ -50,7 +40,6 @@ public class AudiSeatHelper {
 	}
 
 	public void canAdd(int theatreId, int audiNo, String newSeatNo, String newSeatType) {
-		checkAudi(theatreId, audiNo);
 		checkSeatType(newSeatType);
 
 		Audi audi = getAudi(theatreId, audiNo);
@@ -59,7 +48,6 @@ public class AudiSeatHelper {
 	}
 
 	public void canUpdate(int theatreId, int audiNo, String seatNo, String newSeatNo, String newSeatType) {
-		checkAudiSeat(theatreId, audiNo, seatNo);
 		checkSeatType(newSeatType);
 
 		Audi audi = getAudi(theatreId, audiNo);
@@ -67,9 +55,5 @@ public class AudiSeatHelper {
 		Optional<AudiSeat> audiSeatOptional = audiSeatRepository.findByAudiAndSeatNo(audi, newSeatNo);
 		if(audiSeatOptional.isPresent() && !audiSeatOptional.get().getId().equals(audiSeat.getId()))
 			throw new IllegalArgumentException(String.format("audi with seat no. %s already present", newSeatNo));
-	}
-
-	public void canDelete(int theatreId, int audiNo, String seatNo) {
-		checkAudiSeat(theatreId, audiNo, seatNo);
 	}
 }

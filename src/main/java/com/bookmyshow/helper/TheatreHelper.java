@@ -31,20 +31,9 @@ public class TheatreHelper {
 		return cityOptional.orElseGet(() -> cityRepository.save(new City(city, state)));
 	}
 
-	public void checkTheatre(int theatreId) {
+	public Theatre getTheatre(int theatreId) {
 		if(!theatreRepository.existsById(theatreId))
 			throw new EntityNotFoundException("invalid theatre id");
-	}
-
-	public Theatre getTheatre(int theatreId) {
 		return theatreRepository.findById(theatreId).get();
-	}
-
-	public void canUpdate(int theatreId) {
-		checkTheatre(theatreId);
-	}
-
-	public void canDelete(int theatreId) {
-		checkTheatre(theatreId);
 	}
 }

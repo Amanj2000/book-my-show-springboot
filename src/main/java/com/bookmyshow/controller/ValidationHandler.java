@@ -32,11 +32,15 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(EntityNotFoundException.class)
 	protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
-		return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+		Map<String, String> errors = new HashMap<>();
+		errors.put("error", ex.getMessage());
+		return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	protected ResponseEntity<Object> handleCustomMethodArgumentNotValid(IllegalArgumentException ex) {
-		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+		Map<String, String> errors = new HashMap<>();
+		errors.put("error", ex.getMessage());
+		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 	}
 }

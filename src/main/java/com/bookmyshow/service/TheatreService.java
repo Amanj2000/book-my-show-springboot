@@ -29,7 +29,6 @@ public class TheatreService {
 	}
 
 	public TheatreResponseDTO getTheatre(int theatreId) {
-		theatreHelper.checkTheatre(theatreId);
 		Theatre theatre = theatreHelper.getTheatre(theatreId);
 		return new TheatreResponseDTO(theatre);
 	}
@@ -42,8 +41,6 @@ public class TheatreService {
 	}
 
 	public ResponseDTO updateTheatre(int theatreId, TheatreRequestDTO theatreRequestDTO) {
-		theatreHelper.canUpdate(theatreId);
-
 		Theatre theatre = theatreHelper.getTheatre(theatreId);
 		theatreHelper.mapTheatreRequestToTheatre(theatreRequestDTO, theatre);
 		theatreRepository.save(theatre);
@@ -52,8 +49,6 @@ public class TheatreService {
 	}
 
 	public ResponseDTO deleteTheatre(int theatreId) {
-		theatreHelper.canDelete(theatreId);
-
 		Theatre theatre = theatreHelper.getTheatre(theatreId);
 		theatreRepository.delete(theatre);
 

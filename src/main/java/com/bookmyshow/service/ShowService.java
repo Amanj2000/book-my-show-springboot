@@ -32,8 +32,6 @@ public class ShowService {
 	ShowHelper showHelper;
 
 	public List<ShowResponseDTO> getAllShows(int theatreId, int audiNo) {
-		showHelper.checkAudi(theatreId, audiNo);
-
 		Audi audi = showHelper.getAudi(theatreId, audiNo);
 		return showRepository.findByAudi(audi)
 		                     .stream()
@@ -42,14 +40,11 @@ public class ShowService {
 	}
 
 	public ShowResponseDTO getShow(int theatreId, int audiNo, int showId) {
-		showHelper.checkShow(theatreId, audiNo, showId);
-		Show show = showHelper.getShow(showId);
+		Show show = showHelper.getShow(theatreId, audiNo, showId);
 		return new ShowResponseDTO(show);
 	}
 
 	public List<ShowResponseDTO> getAllShows(int movieId) {
-		showHelper.checkMovie(movieId);
-
 		Movie movie = showHelper.getMovie(movieId);
 		return showRepository.findByMovie(movie)
 		                     .stream()
@@ -58,13 +53,12 @@ public class ShowService {
 	}
 
 	public ShowResponseDTO getShow(int movieId, int showId) {
-		showHelper.checkShow(movieId, showId);
-		Show show = showHelper.getShow(showId);
+		Show show = showHelper.getShow(movieId, showId);
 		return new ShowResponseDTO(show);
 	}
 
 	public ResponseDTO addShow(int theatreId, int audiNo, ShowRequestDTO showRequestDTO) {
-		showHelper.canAdd(theatreId, audiNo, showRequestDTO.getDate(), showRequestDTO.getStartTime(), showRequestDTO.getEndTime(), showRequestDTO.getMovieId());
+		showHelper.canAdd(showRequestDTO.getDate(), showRequestDTO.getStartTime(), showRequestDTO.getEndTime());
 
 		Audi audi = showHelper.getAudi(theatreId, audiNo);
 		Movie movie = showHelper.getMovie(showRequestDTO.getMovieId());
@@ -84,10 +78,10 @@ public class ShowService {
 	}
 
 	public ResponseDTO updateShow(int theatreId, int audiNo, int showId, ShowRequestDTO showRequestDTO) {
-		showHelper.canUpdate(theatreId, audiNo, showId, showRequestDTO.getDate(), showRequestDTO.getStartTime(), showRequestDTO.getEndTime(), showRequestDTO.getMovieId());
+		showHelper.canUpdate(showRequestDTO.getDate(), showRequestDTO.getStartTime(), showRequestDTO.getEndTime());
 
 		Movie movie = showHelper.getMovie(showRequestDTO.getMovieId());
-		Show show = showHelper.getShow(showId);
+		Show show = showHelper.getShow(theatreId, audiNo, showId);
 
 		show.setDate(showRequestDTO.getDate());
 		show.setStartTime(showRequestDTO.getStartTime());
@@ -102,9 +96,7 @@ public class ShowService {
 	}
 
 	public ResponseDTO deleteShow(int theatreId, int audiNo, int showId) {
-		showHelper.canDelete(theatreId, audiNo, showId);
-
-		Show show = showHelper.getShow(showId);
+		Show show = showHelper.getShow(theatreId, audiNo, showId);
 		showSeatRepository.deleteAll(showSeatRepository.findByShow(show));
 		showRepository.delete(show);
 

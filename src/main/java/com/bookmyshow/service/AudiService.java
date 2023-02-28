@@ -23,8 +23,6 @@ public class AudiService {
 	AudiHelper audiHelper;
 
 	public List<AudiResponseDTO> getAllAudis(int theatreId) {
-		audiHelper.checkTheatre(theatreId);
-
 		Theatre theatre = audiHelper.getTheatre(theatreId);
 		return audiRepository.findByTheatre(theatre)
 		                     .stream()
@@ -33,7 +31,6 @@ public class AudiService {
 	}
 
 	public AudiResponseDTO getAudi(int theatreId, int audiNo) {
-		audiHelper.checkAudi(theatreId, audiNo);
 		Audi audi = audiHelper.getAudi(theatreId, audiNo);
 		return new AudiResponseDTO(audi, audiHelper.getSeatNo(audi));
 	}
@@ -61,8 +58,6 @@ public class AudiService {
 	}
 
 	public ResponseDTO deleteAudi(int theatreId, int audiNo) {
-		audiHelper.canDelete(theatreId, audiNo);
-
 		Audi audi = audiHelper.getAudi(theatreId, audiNo);
 		audiRepository.delete(audi);
 

@@ -13,7 +13,7 @@ public class ShowResponseDTO {
 	private final Date date;
 	private final Date startTime;
 	private final Date endTime;
-	private final MovieResponseDTO movie;
+	private final String movieName;
 	private final AudiResponseDTO audi;
 	private final List<ShowSeatDTO> showSeats;
 
@@ -22,7 +22,7 @@ public class ShowResponseDTO {
 		this.date = show.getDate();
 		this.startTime = show.getStartTime();
 		this.endTime = show.getEndTime();
-		this.movie = new MovieResponseDTO(show.getMovie());
+		this.movieName = show.getMovie().getTitle();
 		this.audi = new AudiResponseDTO(show.getAudi(), show.getShowSeats().size());
 		this.showSeats = show.getShowSeats()
 		                     .stream()

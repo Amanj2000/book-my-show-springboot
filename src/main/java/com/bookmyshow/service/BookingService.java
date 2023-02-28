@@ -38,8 +38,7 @@ public class BookingService {
 	}
 
 	public BookingResponseDTO getBooking(String email, int bookingId) {
-		bookingHelper.checkBooking(email, bookingId);
-		Booking booking = bookingRepository.findById(bookingId).get();
+		Booking booking = bookingHelper.getBooking(email, bookingId);
 		return new BookingResponseDTO(booking);
 	}
 
@@ -47,7 +46,7 @@ public class BookingService {
 		bookingHelper.canBook(movieId, showId, bookingRequestDTO.getSeatNos());
 
 		User user = bookingHelper.getUser(email);
-		Show show = bookingHelper.getShow(showId);
+		Show show = bookingHelper.getShow(movieId, showId);
 
 		Booking booking = new Booking();
 		booking.setUser(user);
@@ -70,9 +69,7 @@ public class BookingService {
 	}
 
 	public ResponseDTO cancelBooking(String email, int bookingId) {
-		bookingHelper.canCancel(email, bookingId);
-
-		Booking booking = bookingRepository.findById(bookingId).get();
+		Booking booking = bookingHelper.getBooking(email, bookingId);
 		booking.getShowSeats()
 		       .forEach(showSeat -> {
 				   showSeat.setSeatStatus(SeatStatus.Available);

@@ -24,8 +24,6 @@ public class AudiSeatService {
 	AudiSeatHelper audiSeatHelper;
 
 	public List<AudiSeatResponseDTO> getAllAudiSeats(int theatreId, int audiNo) {
-		audiSeatHelper.checkAudi(theatreId, audiNo);
-
 		Audi audi = audiSeatHelper.getAudi(theatreId, audiNo);
 		return audiSeatRepository.findByAudi(audi).stream()
 		                         .map(AudiSeatResponseDTO::new)
@@ -33,7 +31,6 @@ public class AudiSeatService {
 	}
 
 	public AudiSeatResponseDTO getAudiSeat(int theatreId, int audiNo, String seatNo) {
-		audiSeatHelper.checkAudiSeat(theatreId, audiNo, seatNo);
 		AudiSeat audiSeat = audiSeatHelper.getAudiSeat(theatreId, audiNo, seatNo);
 		return new AudiSeatResponseDTO(audiSeat);
 	}
@@ -62,7 +59,6 @@ public class AudiSeatService {
 	}
 
 	public ResponseDTO deleteAudiSeat(int theatreId, int audiNo, String seatNo) {
-		audiSeatHelper.canDelete(theatreId, audiNo, seatNo);
 		AudiSeat audiSeat = audiSeatHelper.getAudiSeat(theatreId, audiNo, seatNo);
 		audiSeatRepository.delete(audiSeat);
 		return new ResponseDTO(true, String.format("audi seat %s deleted successfully", seatNo));

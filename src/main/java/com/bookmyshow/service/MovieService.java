@@ -47,7 +47,6 @@ public class MovieService {
 	}
 
 	public MovieResponseDTO getMovie(int movieId) {
-		movieHelper.checkMovie(movieId);
 		Movie movie = movieHelper.getMovie(movieId);
 		return new MovieResponseDTO(movie);
 	}
@@ -62,7 +61,7 @@ public class MovieService {
 	}
 
 	public ResponseDTO updateMovie(int movieId, MovieRequestDTO movieRequestDTO) {
-		movieHelper.canUpdate(movieId, movieRequestDTO.getGenre());
+		movieHelper.canUpdate(movieRequestDTO.getGenre());
 
 		Movie movie = movieHelper.getMovie(movieId);
 		movieHelper.mapMovieRequestToMovie(movieRequestDTO, movie);
@@ -71,8 +70,6 @@ public class MovieService {
 	}
 
 	public ResponseDTO deleteMovie(int movieId) {
-		movieHelper.canDelete(movieId);
-
 		Movie movie = movieHelper.getMovie(movieId);
 		movieRepository.delete(movie);
 		return new ResponseDTO(true, String.format("movie %s deleted successfully", movie.getTitle()));
