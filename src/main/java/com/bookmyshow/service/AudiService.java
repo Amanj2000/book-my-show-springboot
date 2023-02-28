@@ -10,7 +10,6 @@ import com.bookmyshow.helper.AudiHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +23,7 @@ public class AudiService {
 	AudiHelper audiHelper;
 
 	public List<AudiResponseDTO> getAllAudis(int theatreId) {
-		ResponseDTO responseDTO = audiHelper.checkTheatre(theatreId);
-		if(!responseDTO.isSuccess()) return Collections.emptyList();
+		audiHelper.checkTheatre(theatreId);
 
 		Theatre theatre = audiHelper.getTheatre(theatreId);
 		return audiRepository.findByTheatre(theatre)
@@ -35,16 +33,13 @@ public class AudiService {
 	}
 
 	public AudiResponseDTO getAudi(int theatreId, int audiNo) {
-		ResponseDTO responseDTO = audiHelper.checkAudi(theatreId, audiNo);
-		if(!responseDTO.isSuccess()) return null;
-
+		audiHelper.checkAudi(theatreId, audiNo);
 		Audi audi = audiHelper.getAudi(theatreId, audiNo);
 		return new AudiResponseDTO(audi, audiHelper.getSeatNo(audi));
 	}
 
 	public ResponseDTO addAudi(int theatreId, AudiRequestDTO audiRequestDTO) {
-		ResponseDTO responseDTO = audiHelper.canAdd(theatreId, audiRequestDTO.getAudiNo());
-		if(!responseDTO.isSuccess()) return responseDTO;
+		audiHelper.canAdd(theatreId, audiRequestDTO.getAudiNo());
 
 		Theatre theatre = audiHelper.getTheatre(theatreId);
 		Audi audi = new Audi();
@@ -56,8 +51,7 @@ public class AudiService {
 	}
 
 	public ResponseDTO updateAudi(int theatreId, int audiNo, AudiRequestDTO audiRequestDTO) {
-		ResponseDTO responseDTO = audiHelper.canUpdate(theatreId, audiNo, audiRequestDTO.getAudiNo());
-		if(!responseDTO.isSuccess()) return responseDTO;
+		audiHelper.canUpdate(theatreId, audiNo, audiRequestDTO.getAudiNo());
 
 		Audi audi = audiHelper.getAudi(theatreId, audiNo);
 		audi.setAudiNo(audiRequestDTO.getAudiNo());
@@ -67,8 +61,7 @@ public class AudiService {
 	}
 
 	public ResponseDTO deleteAudi(int theatreId, int audiNo) {
-		ResponseDTO responseDTO = audiHelper.canDelete(theatreId, audiNo);
-		if(!responseDTO.isSuccess()) return responseDTO;
+		audiHelper.canDelete(theatreId, audiNo);
 
 		Audi audi = audiHelper.getAudi(theatreId, audiNo);
 		audiRepository.delete(audi);

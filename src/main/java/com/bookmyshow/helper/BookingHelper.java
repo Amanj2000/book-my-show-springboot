@@ -1,6 +1,5 @@
 package com.bookmyshow.helper;
 
-import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.model.Show;
 import com.bookmyshow.model.User;
 import com.bookmyshow.model.enums.SeatStatus;
@@ -9,6 +8,7 @@ import com.bookmyshow.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,15 +29,21 @@ public class BookingHelper {
 		return userRepository.findByEmail(email).get();
 	}
 
-	public ResponseDTO checkShow(int movieId, int showId) {
-		return showHelper.checkShow(movieId, showId);
+	public void checkShow(int movieId, int showId) {
+		showHelper.checkShow(movieId, showId);
 	}
 
 	public Show getShow(int showId) {
 		return showHelper.getShow(showId);
 	}
 
-	public ResponseDTO checkSeats(Show show, List<String> seatNos) {
+	public void checkBooking(String email, int bookingId) {
+		User user = getUser(email);
+		if(!bookingRepository.findByIdAndUser(bookingId, user).isPresent())
+			throw new EntityNotFoundException("invalid booking id");
+	}
+
+	public void checkSeats(Show show, List<String> seatNos) {
 		Set<String> allShowSeatNos = show.getShowSeats()
 		                                 .stream()
 		                                 .map(showSeat -> showSeat.getAudiSeat().getSeatNo())
@@ -47,18 +53,14 @@ public class BookingHelper {
 		                                   .filter(seatNo -> !allShowSeatNos.contains(seatNo))
 		                                   .collect(Collectors.toList());
 
-		if(invalidSeats.isEmpty())
-			return new ResponseDTO(true, "");
-		return new ResponseDTO(false, String.format("invalid seats: %s", invalidSeats));
+		if(!invalidSeats.isEmpty())
+			throw new IllegalArgumentException(String.format("invalid seats: %s", invalidSeats));
 	}
 
-	public ResponseDTO canBook(int movieId, int showId, List<String> seatNos) {
-		ResponseDTO responseDTO = checkShow(movieId, showId);
-		if(!responseDTO.isSuccess()) return responseDTO;
-
+	public void canBook(int movieId, int showId, List<String> seatNos) {
+		checkShow(movieId, showId);
 		Show show = getShow(showId);
-		responseDTO = checkSeats(show, seatNos);
-		if(!responseDTO.isSuccess()) return responseDTO;
+		checkSeats(show, seatNos);
 
 		Set<String> seatNoSet = new HashSet<>(seatNos);
 		List<String> bookedSeats = show.getShowSeats()
@@ -68,8 +70,8 @@ public class BookingHelper {
 		                               .map(showSeat -> showSeat.getAudiSeat().getSeatNo())
 		                               .collect(Collectors.toList());
 
-		if(bookedSeats.isEmpty()) return new ResponseDTO(true, "");
-		return new ResponseDTO(false, String.format("seats %s are already booked", bookedSeats));
+		if(!bookedSeats.isEmpty())
+			throw new IllegalArgumentException(String.format("seats %s are already booked", bookedSeats));
 	}
 
 	public int calcTotalPrice(Show show, int noOfSeats) {
@@ -78,10 +80,7 @@ public class BookingHelper {
 		return price * noOfSeats;
 	}
 
-	public ResponseDTO canCancel(String email, int bookingId) {
-		User user = getUser(email);
-		if(bookingRepository.findByIdAndUser(bookingId, user).isPresent())
-			return new ResponseDTO(true, "");
-		return new ResponseDTO(false, "invalid booking id");
+	public void canCancel(String email, int bookingId) {
+		checkBooking(email, bookingId);
 	}
 }

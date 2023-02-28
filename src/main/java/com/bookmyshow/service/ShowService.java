@@ -14,7 +14,6 @@ import com.bookmyshow.helper.ShowHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,8 +32,7 @@ public class ShowService {
 	ShowHelper showHelper;
 
 	public List<ShowResponseDTO> getAllShows(int theatreId, int audiNo) {
-		ResponseDTO responseDTO = showHelper.checkAudi(theatreId, audiNo);
-		if(!responseDTO.isSuccess()) return Collections.emptyList();
+		showHelper.checkAudi(theatreId, audiNo);
 
 		Audi audi = showHelper.getAudi(theatreId, audiNo);
 		return showRepository.findByAudi(audi)
@@ -44,16 +42,13 @@ public class ShowService {
 	}
 
 	public ShowResponseDTO getShow(int theatreId, int audiNo, int showId) {
-		ResponseDTO responseDTO = showHelper.checkShow(theatreId, audiNo, showId);
-		if(!responseDTO.isSuccess()) return null;
-
+		showHelper.checkShow(theatreId, audiNo, showId);
 		Show show = showHelper.getShow(showId);
 		return new ShowResponseDTO(show);
 	}
 
 	public List<ShowResponseDTO> getAllShows(int movieId) {
-		ResponseDTO responseDTO = showHelper.checkMovie(movieId);
-		if(!responseDTO.isSuccess()) return Collections.emptyList();
+		showHelper.checkMovie(movieId);
 
 		Movie movie = showHelper.getMovie(movieId);
 		return showRepository.findByMovie(movie)
@@ -63,17 +58,13 @@ public class ShowService {
 	}
 
 	public ShowResponseDTO getShow(int movieId, int showId) {
-		ResponseDTO responseDTO = showHelper.checkShow(movieId, showId);
-		if(!responseDTO.isSuccess()) return null;
-
+		showHelper.checkShow(movieId, showId);
 		Show show = showHelper.getShow(showId);
 		return new ShowResponseDTO(show);
 	}
 
 	public ResponseDTO addShow(int theatreId, int audiNo, ShowRequestDTO showRequestDTO) {
-		ResponseDTO responseDTO = showHelper.canAdd(theatreId, audiNo, showRequestDTO.getDate(),
-				showRequestDTO.getStartTime(), showRequestDTO.getEndTime(), showRequestDTO.getMovieId());
-		if(!responseDTO.isSuccess()) return responseDTO;
+		showHelper.canAdd(theatreId, audiNo, showRequestDTO.getDate(), showRequestDTO.getStartTime(), showRequestDTO.getEndTime(), showRequestDTO.getMovieId());
 
 		Audi audi = showHelper.getAudi(theatreId, audiNo);
 		Movie movie = showHelper.getMovie(showRequestDTO.getMovieId());
@@ -89,18 +80,15 @@ public class ShowService {
 		                                    .map(audiSeat -> new ShowSeat(showRequestDTO.getPrice(), show, audiSeat))
 		                                    .collect(Collectors.toList()));
 		showRepository.save(show);
-
 		return new ResponseDTO(true, String.format("show of movie %s added successfully", movie.getTitle()));
 	}
 
 	public ResponseDTO updateShow(int theatreId, int audiNo, int showId, ShowRequestDTO showRequestDTO) {
-		ResponseDTO responseDTO = showHelper.canUpdate(theatreId, audiNo, showId, showRequestDTO.getDate(),
-				showRequestDTO.getStartTime(), showRequestDTO.getEndTime(), showRequestDTO.getMovieId());
-		if(!responseDTO.isSuccess()) return responseDTO;
+		showHelper.canUpdate(theatreId, audiNo, showId, showRequestDTO.getDate(), showRequestDTO.getStartTime(), showRequestDTO.getEndTime(), showRequestDTO.getMovieId());
 
 		Movie movie = showHelper.getMovie(showRequestDTO.getMovieId());
-
 		Show show = showHelper.getShow(showId);
+
 		show.setDate(showRequestDTO.getDate());
 		show.setStartTime(showRequestDTO.getStartTime());
 		show.setEndTime(showRequestDTO.getEndTime());
@@ -110,19 +98,16 @@ public class ShowService {
 			showSeatRepository.save(showSeat);
 		});
 		showRepository.save(show);
-
 		return new ResponseDTO(true, String.format("show of movie %s updated successfully", movie.getTitle()));
 	}
 
 	public ResponseDTO deleteShow(int theatreId, int audiNo, int showId) {
-		ResponseDTO responseDTO = showHelper.canDelete(theatreId, audiNo, showId);
-		if(!responseDTO.isSuccess()) return responseDTO;
+		showHelper.canDelete(theatreId, audiNo, showId);
 
 		Show show = showHelper.getShow(showId);
 		showSeatRepository.deleteAll(showSeatRepository.findByShow(show));
 		showRepository.delete(show);
 
-		return new ResponseDTO(true, String.format("show of movie %s deleted successfully",
-				show.getMovie().getTitle()));
+		return new ResponseDTO(true, String.format("show of movie %s deleted successfully", show.getMovie().getTitle()));
 	}
 }

@@ -29,9 +29,7 @@ public class TheatreService {
 	}
 
 	public TheatreResponseDTO getTheatre(int theatreId) {
-		ResponseDTO responseDTO = theatreHelper.checkTheatre(theatreId);
-		if(!responseDTO.isSuccess()) return null;
-
+		theatreHelper.checkTheatre(theatreId);
 		Theatre theatre = theatreHelper.getTheatre(theatreId);
 		return new TheatreResponseDTO(theatre);
 	}
@@ -44,8 +42,7 @@ public class TheatreService {
 	}
 
 	public ResponseDTO updateTheatre(int theatreId, TheatreRequestDTO theatreRequestDTO) {
-		ResponseDTO responseDTO = theatreHelper.canUpdate(theatreId);
-		if(!responseDTO.isSuccess()) return responseDTO;
+		theatreHelper.canUpdate(theatreId);
 
 		Theatre theatre = theatreHelper.getTheatre(theatreId);
 		theatreHelper.mapTheatreRequestToTheatre(theatreRequestDTO, theatre);
@@ -55,8 +52,7 @@ public class TheatreService {
 	}
 
 	public ResponseDTO deleteTheatre(int theatreId) {
-		ResponseDTO responseDTO = theatreHelper.canDelete(theatreId);
-		if(!responseDTO.isSuccess()) return responseDTO;
+		theatreHelper.canDelete(theatreId);
 
 		Theatre theatre = theatreHelper.getTheatre(theatreId);
 		theatreRepository.delete(theatre);

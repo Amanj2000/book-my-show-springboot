@@ -1,6 +1,5 @@
 package com.bookmyshow.helper;
 
-import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.model.Audi;
 import com.bookmyshow.model.Theatre;
 import com.bookmyshow.repository.AudiRepository;
@@ -8,6 +7,7 @@ import com.bookmyshow.repository.AudiSeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Component
@@ -22,23 +22,19 @@ public class AudiHelper {
 	@Autowired
 	TheatreHelper theatreHelper;
 
-	public ResponseDTO checkTheatre(int theatreId) {
-		return theatreHelper.checkTheatre(theatreId);
+	public void checkTheatre(int theatreId) {
+		theatreHelper.checkTheatre(theatreId);
 	}
 
 	public Theatre getTheatre(int theatreId) {
 		return theatreHelper.getTheatre(theatreId);
 	}
 
-	public ResponseDTO checkAudi(int theatreId, int audiNo) {
-		ResponseDTO responseDTO = checkTheatre(theatreId);
-		if(!responseDTO.isSuccess()) return responseDTO;
-
+	public void checkAudi(int theatreId, int audiNo) {
+		checkTheatre(theatreId);
 		Theatre theatre = getTheatre(theatreId);
-		if(audiRepository.existsByAudiNoAndTheatre(audiNo, theatre)) {
-			return new ResponseDTO(true, "");
-		}
-		return new ResponseDTO(false, "invalid audi no");
+		if(!audiRepository.existsByAudiNoAndTheatre(audiNo, theatre))
+			throw new EntityNotFoundException("invalid audi no");
 	}
 
 	public Audi getAudi(int theatreId, int audiNo) {
@@ -50,31 +46,25 @@ public class AudiHelper {
 		return audiSeatRepository.countByAudi(audi);
 	}
 
-	public ResponseDTO canAdd(int theatreId, int newAudiNo) {
-		ResponseDTO responseDTO = checkTheatre(theatreId);
-		if(!responseDTO.isSuccess()) return responseDTO;
-
+	public void canAdd(int theatreId, int newAudiNo) {
+		checkTheatre(theatreId);
 		Theatre theatre = getTheatre(theatreId);
-		if(audiRepository.existsByAudiNoAndTheatre(newAudiNo, theatre)) {
-			return new ResponseDTO(false, String.format("audi with no. %d already exists.", newAudiNo));
-		}
-		return new ResponseDTO(true, "");
+
+		if(audiRepository.existsByAudiNoAndTheatre(newAudiNo, theatre))
+			throw new IllegalArgumentException(String.format("audi with no. %d already exists.", newAudiNo));
 	}
 
-	public ResponseDTO canUpdate(int theatreId, int audiNo, int newAudiNo) {
-		ResponseDTO responseDTO = checkAudi(theatreId, audiNo);
-		if(!responseDTO.isSuccess()) return responseDTO;
-
+	public void canUpdate(int theatreId, int audiNo, int newAudiNo) {
+		checkAudi(theatreId, audiNo);
 		Theatre theatre = getTheatre(theatreId);
 		Audi audi = getAudi(theatreId, audiNo);
+
 		Optional<Audi> audiOptional = audiRepository.findByAudiNoAndTheatre(newAudiNo, theatre);
-		if(audiOptional.isPresent() && !audiOptional.get().getId().equals(audi.getId())) {
-			return new ResponseDTO(false, String.format("audi with no. %d already exists.", newAudiNo));
-		}
-		return new ResponseDTO(true, "");
+		if(audiOptional.isPresent() && !audiOptional.get().getId().equals(audi.getId()))
+			throw new IllegalArgumentException(String.format("audi with no. %d already exists.", newAudiNo));
 	}
 
-	public ResponseDTO canDelete(int theatreId, int audiNo) {
-		return checkAudi(theatreId, audiNo);
+	public void canDelete(int theatreId, int audiNo) {
+		checkAudi(theatreId, audiNo);
 	}
 }

@@ -38,15 +38,13 @@ public class BookingService {
 	}
 
 	public BookingResponseDTO getBooking(String email, int bookingId) {
-		User user = bookingHelper.getUser(email);
-		return bookingRepository.findByIdAndUser(bookingId, user)
-		                        .map(BookingResponseDTO::new)
-		                        .orElse(null);
+		bookingHelper.checkBooking(email, bookingId);
+		Booking booking = bookingRepository.findById(bookingId).get();
+		return new BookingResponseDTO(booking);
 	}
 
 	public ResponseDTO bookShow(String email, int movieId, int showId, BookingRequestDTO bookingRequestDTO) {
-		ResponseDTO responseDTO = bookingHelper.canBook(movieId, showId, bookingRequestDTO.getSeatNos());
-		if(!responseDTO.isSuccess()) return responseDTO;
+		bookingHelper.canBook(movieId, showId, bookingRequestDTO.getSeatNos());
 
 		User user = bookingHelper.getUser(email);
 		Show show = bookingHelper.getShow(showId);
@@ -72,8 +70,7 @@ public class BookingService {
 	}
 
 	public ResponseDTO cancelBooking(String email, int bookingId) {
-		ResponseDTO responseDTO = bookingHelper.canCancel(email, bookingId);
-		if(!responseDTO.isSuccess()) return responseDTO;
+		bookingHelper.canCancel(email, bookingId);
 
 		Booking booking = bookingRepository.findById(bookingId).get();
 		booking.getShowSeats()
