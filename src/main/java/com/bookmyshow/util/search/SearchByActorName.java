@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class SearchByActorName implements SearchMovie {
+public class SearchByActorName implements ISearchMovie {
 
 	@Autowired
 	ActorRepository actorRepository;

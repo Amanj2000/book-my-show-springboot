@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public interface SearchMovie {
+public interface ISearchMovie {
 	List<Movie> search(String str);
 }

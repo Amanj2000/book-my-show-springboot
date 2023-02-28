@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class SearchByGenre implements SearchMovie {
+public class SearchByGenre implements ISearchMovie {
 
 	@Autowired
 	MovieRepository movieRepository;
