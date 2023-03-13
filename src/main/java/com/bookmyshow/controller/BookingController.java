@@ -5,6 +5,8 @@ import com.bookmyshow.dto.BookingResponseDTO;
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,23 +20,27 @@ public class BookingController {
 	BookingService bookingService;
 
 	@GetMapping("/bookings")
-	List<BookingResponseDTO> getAllBookings(Principal principal) {
-		return bookingService.getAllBookings(principal.getName());
+	public ResponseEntity<?> getAllBookings(Principal principal) {
+		List<BookingResponseDTO> bookingResponseDTOS = bookingService.getAllBookings(principal.getName());
+		return new ResponseEntity<>(bookingResponseDTOS, HttpStatus.OK);
 	}
 
 	@GetMapping("/bookings/{bookingId}")
-	BookingResponseDTO getBooking(Principal principal, @PathVariable int bookingId) {
-		return bookingService.getBooking(principal.getName(), bookingId);
+	public ResponseEntity<?> getBooking(Principal principal, @PathVariable int bookingId) {
+		BookingResponseDTO bookingResponseDTO = bookingService.getBooking(principal.getName(), bookingId);
+		return new ResponseEntity<>(bookingResponseDTO, HttpStatus.OK);
 	}
 
 	@PostMapping("/movies/{movieId}/shows/{showId}/book")
-	ResponseDTO bookShow(Principal principal, @PathVariable int movieId, @PathVariable int showId,
+	public ResponseEntity<?> bookShow(Principal principal, @PathVariable int movieId, @PathVariable int showId,
 	                            @Valid @RequestBody BookingRequestDTO bookingRequestDTO) {
-		return bookingService.bookShow(principal.getName(), movieId, showId, bookingRequestDTO);
+		ResponseDTO responseDTO = bookingService.bookShow(principal.getName(), movieId, showId, bookingRequestDTO);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/bookings/{bookingId}")
-	ResponseDTO cancelBooking(Principal principal, @PathVariable int bookingId) {
-		return bookingService.cancelBooking(principal.getName(), bookingId);
+	public ResponseEntity<?> cancelBooking(Principal principal, @PathVariable int bookingId) {
+		ResponseDTO responseDTO = bookingService.cancelBooking(principal.getName(), bookingId);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 }

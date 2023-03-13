@@ -2,6 +2,8 @@ package com.bookmyshow.controller;
 
 import com.bookmyshow.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,7 +16,8 @@ public class HomeController {
 	UserRepository userRepository;
 
 	@GetMapping
-	public String home(Principal principal) {
-		return String.format("Welcome, %s", userRepository.findByEmail(principal.getName()).get().getFirstName());
+	public ResponseEntity<?> home(Principal principal) {
+		String message = String.format("Welcome, %s", userRepository.findByEmail(principal.getName()).get().getFirstName());
+		return new ResponseEntity<>(message, HttpStatus.OK);
 	}
 }

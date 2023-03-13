@@ -5,6 +5,8 @@ import com.bookmyshow.dto.MovieResponseDTO;
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,42 +21,50 @@ public class MovieController {
 	MovieService movieService;
 
 	@GetMapping
-	public List<MovieResponseDTO> getAllMovies() {
-		return movieService.getAllMovies();
+	public ResponseEntity<?> getAllMovies() {
+		List<MovieResponseDTO> movieResponseDTOS = movieService.getAllMovies();
+		return new ResponseEntity<>(movieResponseDTOS, HttpStatus.OK);
 	}
 
 	@GetMapping(params = "movieName")
-	public List<MovieResponseDTO> getByMovieName(@RequestParam String movieName) {
-		return movieService.getByMovieName(movieName);
+	public ResponseEntity<?> getByMovieName(@RequestParam String movieName) {
+		List<MovieResponseDTO> movieResponseDTOS = movieService.getByMovieName(movieName);
+		return new ResponseEntity<>(movieResponseDTOS, HttpStatus.OK);
 	}
 
 	@GetMapping(params = "actorName")
-	public List<MovieResponseDTO> getByActorName(@RequestParam String actorName) {
-		return movieService.getByActorName(actorName);
+	public ResponseEntity<?> getByActorName(@RequestParam String actorName) {
+		List<MovieResponseDTO> movieResponseDTOS = movieService.getByActorName(actorName);
+		return new ResponseEntity<>(movieResponseDTOS, HttpStatus.OK);
 	}
 
 	@GetMapping(params = "genre")
-	public List<MovieResponseDTO> getByGenre(@RequestParam String genre) {
-		return movieService.getByGenre(genre);
+	public ResponseEntity<?> getByGenre(@RequestParam String genre) {
+		List<MovieResponseDTO> movieResponseDTOS = movieService.getByGenre(genre);
+		return new ResponseEntity<>(movieResponseDTOS, HttpStatus.OK);
 	}
 
 	@GetMapping("/{movieId}")
-	public MovieResponseDTO getMovie(@PathVariable int movieId) {
-		return movieService.getMovie(movieId);
+	public ResponseEntity<?> getMovie(@PathVariable int movieId) {
+		MovieResponseDTO movieResponseDTO = movieService.getMovie(movieId);
+		return new ResponseEntity<>(movieResponseDTO, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseDTO addMovie(@Valid @RequestBody MovieRequestDTO movieRequestDTO) {
-		return movieService.addMovie(movieRequestDTO);
+	public ResponseEntity<?> addMovie(@Valid @RequestBody MovieRequestDTO movieRequestDTO) {
+		ResponseDTO responseDTO = movieService.addMovie(movieRequestDTO);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 
 	@PutMapping("/{movieId}")
-	public ResponseDTO updateMovie(@PathVariable int movieId, @Valid @RequestBody MovieRequestDTO movieRequestDTO) {
-		return movieService.updateMovie(movieId, movieRequestDTO);
+	public ResponseEntity<?> updateMovie(@PathVariable int movieId, @Valid @RequestBody MovieRequestDTO movieRequestDTO) {
+		ResponseDTO responseDTO = movieService.updateMovie(movieId, movieRequestDTO);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{movieId}")
-	public ResponseDTO deleteMovie(@PathVariable int movieId) {
-		return movieService.deleteMovie(movieId);
+	public ResponseEntity<?> deleteMovie(@PathVariable int movieId) {
+		ResponseDTO responseDTO = movieService.deleteMovie(movieId);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 }

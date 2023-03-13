@@ -3,6 +3,8 @@ package com.bookmyshow.controller;
 import com.bookmyshow.dto.*;
 import com.bookmyshow.service.AudiSeatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,29 +18,35 @@ public class AudiSeatController {
 	AudiSeatService audiSeatService;
 
 	@GetMapping
-	public List<AudiSeatResponseDTO> getAllAudiSeats(@PathVariable int theatreId, @PathVariable int audiNo) {
-		return audiSeatService.getAllAudiSeats(theatreId, audiNo);
+	public ResponseEntity<?> getAllAudiSeats(@PathVariable int theatreId,
+	                                                                @PathVariable int audiNo) {
+		List<AudiSeatResponseDTO> audiSeatResponseDTOS = audiSeatService.getAllAudiSeats(theatreId, audiNo);
+		return new ResponseEntity<>(audiSeatResponseDTOS, HttpStatus.OK);
 	}
 
 	@GetMapping("/{seatNo}")
-	public AudiSeatResponseDTO getAudiSeat(@PathVariable int theatreId, @PathVariable int audiNo, @PathVariable String seatNo) {
-		return audiSeatService.getAudiSeat(theatreId, audiNo, seatNo);
+	public ResponseEntity<?> getAudiSeat(@PathVariable int theatreId, @PathVariable int audiNo, @PathVariable String seatNo) {
+		AudiSeatResponseDTO audiSeatResponseDTO = audiSeatService.getAudiSeat(theatreId, audiNo, seatNo);
+		return new ResponseEntity<>(audiSeatResponseDTO, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseDTO addAudiSeat(@PathVariable int theatreId, @PathVariable int audiNo,
+	public ResponseEntity<?> addAudiSeat(@PathVariable int theatreId, @PathVariable int audiNo,
 	                           @Valid @RequestBody AudiSeatRequestDTO audiSeatRequestDTO) {
-		return audiSeatService.addAudiSeat(theatreId, audiNo, audiSeatRequestDTO);
+		ResponseDTO responseDTO = audiSeatService.addAudiSeat(theatreId, audiNo, audiSeatRequestDTO);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 
 	@PutMapping("/{seatNo}")
-	public ResponseDTO updateAudiSeat(@PathVariable int theatreId, @PathVariable int audiNo,
+	public ResponseEntity<?> updateAudiSeat(@PathVariable int theatreId, @PathVariable int audiNo,
 	                                  @PathVariable String seatNo, @Valid @RequestBody AudiSeatRequestDTO audiSeatRequestDTO) {
-		return audiSeatService.updateAudiSeat(theatreId, audiNo, seatNo, audiSeatRequestDTO);
+		ResponseDTO responseDTO = audiSeatService.updateAudiSeat(theatreId, audiNo, seatNo, audiSeatRequestDTO);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{seatNo}")
-	public ResponseDTO deleteAudiSeat(@PathVariable int theatreId, @PathVariable int audiNo, @PathVariable String seatNo) {
-		return audiSeatService.deleteAudiSeat(theatreId, audiNo, seatNo);
+	public ResponseEntity<?> deleteAudiSeat(@PathVariable int theatreId, @PathVariable int audiNo, @PathVariable String seatNo) {
+		ResponseDTO responseDTO = audiSeatService.deleteAudiSeat(theatreId, audiNo, seatNo);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 }

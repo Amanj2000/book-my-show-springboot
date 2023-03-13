@@ -3,6 +3,8 @@ package com.bookmyshow.controller;
 import com.bookmyshow.dto.*;
 import com.bookmyshow.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,29 +17,34 @@ public class ShowController {
 	ShowService showService;
 
 	@GetMapping
-	public List<ShowResponseDTO> getAllShows(@PathVariable int theatreId, @PathVariable int audiNo) {
-		return showService.getAllShows(theatreId, audiNo);
+	public ResponseEntity<?> getAllShows(@PathVariable int theatreId, @PathVariable int audiNo) {
+		List<ShowResponseDTO> showResponseDTOS = showService.getAllShows(theatreId, audiNo);
+		return new ResponseEntity<>(showResponseDTOS, HttpStatus.OK);
 	}
 
 	@GetMapping("/{showId}")
-	public ShowResponseDTO getShow(@PathVariable int theatreId, @PathVariable int audiNo, @PathVariable int showId) {
-		return showService.getShow(theatreId, audiNo, showId);
+	public ResponseEntity<?> getShow(@PathVariable int theatreId, @PathVariable int audiNo, @PathVariable int showId) {
+		ShowResponseDTO showResponseDTO = showService.getShow(theatreId, audiNo, showId);
+		return new ResponseEntity<>(showResponseDTO, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseDTO addShow(@PathVariable int theatreId, @PathVariable int audiNo,
+	public ResponseEntity<?> addShow(@PathVariable int theatreId, @PathVariable int audiNo,
 	                               @Valid @RequestBody ShowRequestDTO showRequestDTO) {
-		return showService.addShow(theatreId, audiNo, showRequestDTO);
+		ResponseDTO responseDTO = showService.addShow(theatreId, audiNo, showRequestDTO);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 
 	@PutMapping("/{showId}")
-	public ResponseDTO updateShow(@PathVariable int theatreId, @PathVariable int audiNo,
+	public ResponseEntity<?> updateShow(@PathVariable int theatreId, @PathVariable int audiNo,
 	                                  @PathVariable int showId, @Valid @RequestBody ShowRequestDTO showRequestDTO) {
-		return showService.updateShow(theatreId, audiNo, showId, showRequestDTO);
+		ResponseDTO responseDTO = showService.updateShow(theatreId, audiNo, showId, showRequestDTO);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{showId}")
-	public ResponseDTO deleteShow(@PathVariable int theatreId, @PathVariable int audiNo, @PathVariable int showId) {
-		return showService.deleteShow(theatreId, audiNo, showId);
+	public ResponseEntity<?> deleteShow(@PathVariable int theatreId, @PathVariable int audiNo, @PathVariable int showId) {
+		ResponseDTO responseDTO = showService.deleteShow(theatreId, audiNo, showId);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 }

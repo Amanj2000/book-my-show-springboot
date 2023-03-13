@@ -5,6 +5,8 @@ import com.bookmyshow.dto.TheatreResponseDTO;
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.service.TheatreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,27 +20,32 @@ public class TheatreController {
 	TheatreService theatreService;
 	
 	@GetMapping
-	public List<TheatreResponseDTO> getAllTheatres() {
-		return theatreService.getAllTheatres();
+	public ResponseEntity<?> getAllTheatres() {
+		List<TheatreResponseDTO> theatreResponseDTOS = theatreService.getAllTheatres();
+		return new ResponseEntity<>(theatreResponseDTOS, HttpStatus.OK);
 	}
 
 	@GetMapping("/{theatreId}")
-	public TheatreResponseDTO getTheatre(@PathVariable int theatreId) {
-		return theatreService.getTheatre(theatreId);
+	public ResponseEntity<?> getTheatre(@PathVariable int theatreId) {
+		TheatreResponseDTO theatreResponseDTO = theatreService.getTheatre(theatreId);
+		return new ResponseEntity<>(theatreResponseDTO, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseDTO addTheatre(@Valid @RequestBody TheatreRequestDTO theatreRequestDTO) {
-		return theatreService.addTheatre(theatreRequestDTO);
+	public ResponseEntity<?> addTheatre(@Valid @RequestBody TheatreRequestDTO theatreRequestDTO) {
+		ResponseDTO responseDTO = theatreService.addTheatre(theatreRequestDTO);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 
 	@PutMapping("/{theatreId}")
-	public ResponseDTO updateTheatre(@PathVariable int theatreId, @Valid @RequestBody TheatreRequestDTO theatreRequestDTO) {
-		return theatreService.updateTheatre(theatreId, theatreRequestDTO);
+	public ResponseEntity<?> updateTheatre(@PathVariable int theatreId, @Valid @RequestBody TheatreRequestDTO theatreRequestDTO) {
+		ResponseDTO responseDTO = theatreService.updateTheatre(theatreId, theatreRequestDTO);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{theatreId}")
-	public ResponseDTO deleteTheatre(@PathVariable int theatreId) {
-		return theatreService.deleteTheatre(theatreId);
+	public ResponseEntity<?> deleteTheatre(@PathVariable int theatreId) {
+		ResponseDTO responseDTO = theatreService.deleteTheatre(theatreId);
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 	}
 }
