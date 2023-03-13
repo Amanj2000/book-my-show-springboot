@@ -13,12 +13,11 @@ import java.util.Optional;
 
 @Component
 public class TheatreHelper {
+	@Autowired
+	private CityRepository cityRepository;
 
 	@Autowired
-	CityRepository cityRepository;
-
-	@Autowired
-	TheatreRepository theatreRepository;
+	private TheatreRepository theatreRepository;
 
 	public void mapTheatreRequestToTheatre(TheatreRequestDTO theatreRequestDTO, Theatre theatre) {
 		theatre.setName(theatreRequestDTO.getName());

@@ -1,15 +1,19 @@
 package com.bookmyshow.helper;
 
+import com.bookmyshow.dto.BookingRequestDTO;
 import com.bookmyshow.model.Booking;
 import com.bookmyshow.model.Show;
+import com.bookmyshow.model.ShowSeat;
 import com.bookmyshow.model.User;
 import com.bookmyshow.model.enums.SeatStatus;
 import com.bookmyshow.repository.BookingRepository;
+import com.bookmyshow.repository.ShowSeatRepository;
 import com.bookmyshow.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,13 +22,39 @@ import java.util.stream.Collectors;
 @Component
 public class BookingHelper {
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	BookingRepository bookingRepository;
+	private ShowSeatRepository showSeatRepository;
 
 	@Autowired
-	ShowHelper showHelper;
+	private BookingRepository bookingRepository;
+
+	@Autowired
+	private ShowHelper showHelper;
+
+	public void mapBookingRequestToBooking(BookingRequestDTO bookingRequestDTO, Booking booking, Show show) {
+		booking.setShow(show);
+		booking.setBookingTime(new Date());
+		booking.setNoOfSeats(bookingRequestDTO.getSeatNos().size());
+		booking.setTotalPrice(calcTotalPrice(show, booking.getNoOfSeats()));
+		booking.setShowSeats(bookingRequestDTO.getSeatNos()
+		                                      .stream()
+		                                      .map(seatNo -> {
+			                                      ShowSeat showSeat = showSeatRepository.findByShowAndAudiSeatSeatNo(show,
+					                                      seatNo).get();
+			                                      showSeat.setSeatStatus(SeatStatus.Booked);
+			                                      showSeat.setBooking(booking);
+			                                      showSeatRepository.save(showSeat);
+			                                      return showSeat;
+		                                      }).collect(Collectors.toList()));
+	}
+
+	private int calcTotalPrice(Show show, int noOfSeats) {
+		int price = show.getShowSeats()
+		                .get(0).getPrice();
+		return price * noOfSeats;
+	}
 
 	public User getUser(String email) {
 		return userRepository.findByEmail(email).get();
@@ -69,11 +99,5 @@ public class BookingHelper {
 
 		if(!bookedSeats.isEmpty())
 			throw new IllegalArgumentException(String.format("seats %s are already booked", bookedSeats));
-	}
-
-	public int calcTotalPrice(Show show, int noOfSeats) {
-		int price = show.getShowSeats()
-		                .get(0).getPrice();
-		return price * noOfSeats;
 	}
 }

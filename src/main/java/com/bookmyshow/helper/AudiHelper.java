@@ -12,15 +12,14 @@ import java.util.Optional;
 
 @Component
 public class AudiHelper {
+	@Autowired
+	private AudiRepository audiRepository;
 
 	@Autowired
-	AudiRepository audiRepository;
+	private AudiSeatRepository audiSeatRepository;
 
 	@Autowired
-	AudiSeatRepository audiSeatRepository;
-
-	@Autowired
-	TheatreHelper theatreHelper;
+	private TheatreHelper theatreHelper;
 
 	public Theatre getTheatre(int theatreId) {
 		return theatreHelper.getTheatre(theatreId);

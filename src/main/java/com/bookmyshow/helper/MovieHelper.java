@@ -13,16 +13,17 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @Component
 public class MovieHelper {
 	@Autowired
-	MovieRepository movieRepository;
+	private MovieRepository movieRepository;
 
 	@Autowired
-	ActorRepository actorRepository;
+	private ActorRepository actorRepository;
 
 	public List<MovieResponseDTO> toMovieResponseDTOS(List<Movie> movies) {
 		return movies.stream()
@@ -30,6 +31,14 @@ public class MovieHelper {
 		             .collect(Collectors.toList());
 	}
 
+	private List<Actor> createActorSet(List<String> cast) {
+		return cast.stream()
+		           .map(actorName -> {
+					   Optional<Actor> actorOptional = actorRepository.findByName(actorName);
+			           return actorOptional.orElseGet(() -> actorRepository.save(new Actor(actorName)));
+		           })
+		           .collect(Collectors.toList());
+	}
 	public void mapMovieRequestToMovie(MovieRequestDTO movieRequestDTO, Movie movie) {
 		movie.setTitle(movieRequestDTO.getTitle());
 		movie.setDescription(movieRequestDTO.getDescription());
@@ -37,17 +46,6 @@ public class MovieHelper {
 		movie.setLanguage(movieRequestDTO.getLanguage());
 		movie.setGenre(Genre.valueOf(movieRequestDTO.getGenre().toUpperCase()));
 		movie.setActors(createActorSet(movieRequestDTO.getCast()));
-	}
-
-	private List<Actor> createActorSet(List<String> cast) {
-		return cast.stream()
-		           .map(actorName -> {
-					   if(!actorRepository.existsByName(actorName)) {
-						   actorRepository.save(new Actor(actorName));
-					   }
-					   return actorRepository.findByName(actorName).get();
-				   })
-		           .collect(Collectors.toList());
 	}
 
 	public Movie getMovie(int movieId) {

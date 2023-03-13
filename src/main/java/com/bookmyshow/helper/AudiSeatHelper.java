@@ -1,5 +1,6 @@
 package com.bookmyshow.helper;
 
+import com.bookmyshow.dto.AudiSeatRequestDTO;
 import com.bookmyshow.model.Audi;
 import com.bookmyshow.model.AudiSeat;
 import com.bookmyshow.model.enums.SeatType;
@@ -14,10 +15,15 @@ import java.util.Optional;
 @Component
 public class AudiSeatHelper {
 	@Autowired
-	AudiSeatRepository audiSeatRepository;
+	private AudiSeatRepository audiSeatRepository;
 
 	@Autowired
-	AudiHelper audiHelper;
+	private AudiHelper audiHelper;
+
+	public void mapAudiSeatRequestToAudi(AudiSeatRequestDTO audiSeatRequestDTO, AudiSeat audiSeat) {
+		audiSeat.setSeatNo(audiSeatRequestDTO.getSeatNo());
+		audiSeat.setSeatType(SeatType.valueOf(audiSeatRequestDTO.getSeatType().toUpperCase()));
+	}
 
 	public Audi getAudi(int theatreId, int audiNo) {
 		return audiHelper.getAudi(theatreId, audiNo);
