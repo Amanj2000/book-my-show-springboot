@@ -17,7 +17,7 @@ import java.util.List;
 public class BookingController {
 
 	@Autowired
-	BookingService bookingService;
+	private BookingService bookingService;
 
 	@GetMapping("/bookings")
 	public ResponseEntity<?> getAllBookings(Principal principal) {

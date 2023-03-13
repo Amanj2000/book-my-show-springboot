@@ -16,10 +16,10 @@ import java.util.List;
 public class TheatreService {
 
 	@Autowired
-	TheatreRepository theatreRepository;
+	private TheatreRepository theatreRepository;
 
 	@Autowired
-	TheatreHelper theatreHelper;
+	private TheatreHelper theatreHelper;
 
 	public List<TheatreResponseDTO> getAllTheatres() {
 		List<TheatreResponseDTO> theatres = new ArrayList<>();
@@ -37,21 +37,19 @@ public class TheatreService {
 		Theatre theatre = new Theatre();
 		theatreHelper.mapTheatreRequestToTheatre(theatreRequestDTO, theatre);
 		theatreRepository.save(theatre);
-		return new ResponseDTO(true, String.format("theatre %s saved successfully", theatre.getName()));
+		return new ResponseDTO(String.format("theatre %s saved successfully", theatre.getName()));
 	}
 
 	public ResponseDTO updateTheatre(int theatreId, TheatreRequestDTO theatreRequestDTO) {
 		Theatre theatre = theatreHelper.getTheatre(theatreId);
 		theatreHelper.mapTheatreRequestToTheatre(theatreRequestDTO, theatre);
 		theatreRepository.save(theatre);
-
-		return new ResponseDTO(true, String.format("theatre %s updated successfully", theatre.getName()));
+		return new ResponseDTO(String.format("theatre %s updated successfully", theatre.getName()));
 	}
 
 	public ResponseDTO deleteTheatre(int theatreId) {
 		Theatre theatre = theatreHelper.getTheatre(theatreId);
 		theatreRepository.delete(theatre);
-
-		return new ResponseDTO(true, String.format("theatre %s deleted successfully", theatre.getName()));
+		return new ResponseDTO(String.format("theatre %s deleted successfully", theatre.getName()));
 	}
 }

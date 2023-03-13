@@ -15,12 +15,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class AudiService {
+	@Autowired
+	private AudiRepository audiRepository;
 
 	@Autowired
-	AudiRepository audiRepository;
-
-	@Autowired
-	AudiHelper audiHelper;
+	private AudiHelper audiHelper;
 
 	public List<AudiResponseDTO> getAllAudis(int theatreId) {
 		Theatre theatre = audiHelper.getTheatre(theatreId);
@@ -44,7 +43,7 @@ public class AudiService {
 		audi.setTheatre(theatre);
 		audiRepository.save(audi);
 
-		return new ResponseDTO(true, String.format("audi %d added successfully", audi.getAudiNo()));
+		return new ResponseDTO(String.format("audi %d added successfully", audi.getAudiNo()));
 	}
 
 	public ResponseDTO updateAudi(int theatreId, int audiNo, AudiRequestDTO audiRequestDTO) {
@@ -54,13 +53,13 @@ public class AudiService {
 		audi.setAudiNo(audiRequestDTO.getAudiNo());
 		audiRepository.save(audi);
 
-		return new ResponseDTO(true, String.format("audi %d updated successfully", audiNo));
+		return new ResponseDTO(String.format("audi %d updated successfully", audiNo));
 	}
 
 	public ResponseDTO deleteAudi(int theatreId, int audiNo) {
 		Audi audi = audiHelper.getAudi(theatreId, audiNo);
 		audiRepository.delete(audi);
 
-		return  new ResponseDTO(true, String.format("audi %d deleted successfully", audiNo));
+		return  new ResponseDTO(String.format("audi %d deleted successfully", audiNo));
 	}
 }

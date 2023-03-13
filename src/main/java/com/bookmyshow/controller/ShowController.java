@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/theatres/{theatreId}/audis/{audiNo}/shows")
 public class ShowController {
 	@Autowired
-	ShowService showService;
+	private ShowService showService;
 
 	@GetMapping
 	public ResponseEntity<?> getAllShows(@PathVariable int theatreId, @PathVariable int audiNo) {

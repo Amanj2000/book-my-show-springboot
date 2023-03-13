@@ -18,7 +18,7 @@ import javax.validation.Valid;
 public class AuthController {
 
 	@Autowired
-	AuthService authService;
+	private AuthService authService;
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest signupRequest) {

@@ -15,7 +15,7 @@ import java.util.List;
 public class AudiSeatController {
 
 	@Autowired
-	AudiSeatService audiSeatService;
+	private AudiSeatService audiSeatService;
 
 	@GetMapping
 	public ResponseEntity<?> getAllAudiSeats(@PathVariable int theatreId,

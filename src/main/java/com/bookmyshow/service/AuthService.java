@@ -24,17 +24,17 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 public class AuthService {
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	AuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 
 	public ResponseDTO signup(SignupRequest signupRequest) {
 		if(userRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
-			return new ResponseDTO(false, "user by this email already exists");
+			throw new IllegalArgumentException("user by this email already exists");
 		}
 		User user = new User();
 		user.setEmail(signupRequest.getEmail());
@@ -44,7 +44,7 @@ public class AuthService {
 		user.setAge(signupRequest.getAge());
 
 		userRepository.save(user);
-		return new ResponseDTO(true, "user has been registered");
+		return new ResponseDTO("user has been registered");
 	}
 
 	public ResponseDTO login(HttpServletRequest req, LoginRequest loginRequest) {
@@ -58,9 +58,9 @@ public class AuthService {
 			HttpSession session = req.getSession(true);
 			session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
 
-			return new ResponseDTO(true, String.format("user %s successfully logged in",
+			return new ResponseDTO(String.format("user %s successfully logged in",
 					userOptional.get().getEmail()));
 		}
-		return new ResponseDTO(false, "invalid credentials");
+		throw new IllegalArgumentException("invalid credentials");
 	}
 }

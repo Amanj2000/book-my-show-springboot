@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 public class SearchService {
 
 	@Autowired
-	List<ISearchMovie> searchMovies;
+	private List<ISearchMovie> searchMovies;
 
-	public List<MovieResponseDTO> searchMovie(String keyword) {
+	public List<MovieResponseDTO> searchMovie(String content) {
 		Set<Movie> movies = new HashSet<>();
 		for(ISearchMovie searchMovie: searchMovies) {
-			movies.addAll(searchMovie.search(keyword));
+			movies.addAll(searchMovie.search(content));
 		}
 		return movies.stream()
 		             .map(MovieResponseDTO::new)

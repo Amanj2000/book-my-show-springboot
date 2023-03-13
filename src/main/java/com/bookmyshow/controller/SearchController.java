@@ -17,7 +17,7 @@ import java.util.List;
 public class SearchController {
 
 	@Autowired
-	SearchService searchService;
+	private SearchService searchService;
 
 	@GetMapping(params = "content")
 	public ResponseEntity<?> getByMovieName(@RequestParam String content) {

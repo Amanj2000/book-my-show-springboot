@@ -13,7 +13,7 @@ import java.security.Principal;
 public class HomeController {
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@GetMapping
 	public ResponseEntity<?> home(Principal principal) {

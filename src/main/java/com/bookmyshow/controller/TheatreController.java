@@ -17,7 +17,7 @@ import java.util.List;
 public class TheatreController {
 	
 	@Autowired
-	TheatreService theatreService;
+	private TheatreService theatreService;
 	
 	@GetMapping
 	public ResponseEntity<?> getAllTheatres() {

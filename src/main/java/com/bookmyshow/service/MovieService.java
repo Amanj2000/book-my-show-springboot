@@ -14,15 +14,14 @@ import java.util.*;
 
 @Service
 public class MovieService {
+	@Autowired
+	private MovieRepository movieRepository;
 
 	@Autowired
-	MovieRepository movieRepository;
+	private ActorRepository actorRepository;
 
 	@Autowired
-	ActorRepository actorRepository;
-
-	@Autowired
-	MovieHelper movieHelper;
+	private MovieHelper movieHelper;
 
 	public List<MovieResponseDTO> getAllMovies() {
 		List<MovieResponseDTO> movies = new ArrayList<>();
@@ -57,7 +56,7 @@ public class MovieService {
 		Movie movie = new Movie();
 		movieHelper.mapMovieRequestToMovie(movieRequestDTO, movie);
 		movieRepository.save(movie);
-		return new ResponseDTO(true, String.format("movie %s added successfully", movie.getTitle()));
+		return new ResponseDTO(String.format("movie %s added successfully", movie.getTitle()));
 	}
 
 	public ResponseDTO updateMovie(int movieId, MovieRequestDTO movieRequestDTO) {
@@ -66,12 +65,12 @@ public class MovieService {
 		Movie movie = movieHelper.getMovie(movieId);
 		movieHelper.mapMovieRequestToMovie(movieRequestDTO, movie);
 		movieRepository.save(movie);
-		return new ResponseDTO(true, String.format("movie %s updated successfully", movie.getTitle()));
+		return new ResponseDTO(String.format("movie %s updated successfully", movie.getTitle()));
 	}
 
 	public ResponseDTO deleteMovie(int movieId) {
 		Movie movie = movieHelper.getMovie(movieId);
 		movieRepository.delete(movie);
-		return new ResponseDTO(true, String.format("movie %s deleted successfully", movie.getTitle()));
+		return new ResponseDTO(String.format("movie %s deleted successfully", movie.getTitle()));
 	}
 }
