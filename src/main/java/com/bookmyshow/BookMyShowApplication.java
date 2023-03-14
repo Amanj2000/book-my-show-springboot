@@ -1,5 +1,6 @@
 package com.bookmyshow;
 
+import com.bookmyshow.dto.MovieRequestDTO;
 import com.bookmyshow.model.*;
 import com.bookmyshow.model.enums.Genre;
 import com.bookmyshow.model.enums.SeatType;
@@ -7,6 +8,7 @@ import com.bookmyshow.repository.AudiRepository;
 import com.bookmyshow.repository.AudiSeatRepository;
 import com.bookmyshow.repository.MovieRepository;
 import com.bookmyshow.repository.UserRepository;
+import com.bookmyshow.service.MovieService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,12 +28,12 @@ public class BookMyShowApplication {
 
 	@Bean
 	CommandLineRunner commandLineRunner(UserRepository userRepository, PasswordEncoder passwordEncoder,
-	                                    MovieRepository movieRepository, AudiRepository audiRepository,
+	                                    MovieService movieService, AudiRepository audiRepository,
 	                                    AudiSeatRepository audiSeatRepository) {
 		return args -> {
-			saveUsers(userRepository, passwordEncoder);
-			saveMovies(movieRepository);
-			saveAudiSeats(audiRepository, audiSeatRepository);
+//			saveUsers(userRepository, passwordEncoder);
+//			saveMovies(movieService);
+//			saveAudiSeats(audiRepository, audiSeatRepository);
 		};
 	}
 
@@ -50,58 +52,46 @@ public class BookMyShowApplication {
 
 
 	@SuppressWarnings("SpellCheckingInspection")
-	private void saveMovies(MovieRepository movieRepository) {
-		Actor shahRukhKhan = new Actor("Shah Rukh Khan");
-		Actor johnAbraham = new Actor("John Abraham");
-		Actor salmanKhan = new Actor("Salman Khan");
-		Actor rajkumarRao = new Actor("Rajkumar Rao");
-		Actor ayushmannKhurrana = new Actor("Ayushmann Khurrana");
-		Actor akshayKumar = new Actor("Akshay Kumar");
-		Actor nanaPatekar = new Actor("Nana Patekar");
-		Actor anilKapoor = new Actor("Anil Kapoor");
-
-
-		Actor deepikaPadukone = new Actor("Deepika Padukone");
-		Actor katrinaKaif = new Actor("Katrina Kaif");
-		Actor kritiSanon = new Actor("Kriti Sanon");
-
-		Movie pathan = new Movie(
+	private void saveMovies(MovieService movieService) {
+		MovieRequestDTO pathan = new MovieRequestDTO(
 				"Pathan",
 				"Pathaan is a 2023 Indian Hindi-language action thriller film directed by Siddharth Anand and produced by Aditya Chopra of Yash Raj Films.",
 				146,
 				"Hindi",
-				Genre.ACTION,
-				Arrays.asList(shahRukhKhan, salmanKhan, johnAbraham, deepikaPadukone)
+				"ACTION",
+				Arrays.asList("Shah Rukh Khan", "Salman Khan", "John Abraham", "Deepika Padukone")
 		);
+		movieService.addMovie(pathan);
 
-		Movie welcome = new Movie(
+		MovieRequestDTO welcome = new MovieRequestDTO(
 				"Welcome",
 				"Welcome is an Indian 2007 Hindi-language comedy film written and directed by Anees Bazmee. ",
 				159,
 				"Hindi",
-				Genre.COMEDY,
-				Arrays.asList(akshayKumar, nanaPatekar, anilKapoor, katrinaKaif)
+				"COMEDY",
+				Arrays.asList("Akshay Kumar", "Nana Patekar", "Anil Kapoor", "Katrina Kaif")
 		);
+		movieService.addMovie(welcome);
 
-		Movie ekThaTiger = new Movie(
+		MovieRequestDTO ekThaTiger = new MovieRequestDTO(
 				"Ek Tha Tiger",
 				"Ek Tha Tiger is a 2012 Indian Hindi-language spy action-thriller film directed by Kabir Khan and written by Kabir and Neelesh Misra",
 				132,
 				"Hindi",
-				Genre.ACTION,
-				Arrays.asList(salmanKhan, katrinaKaif)
+				"ACTION",
+				Arrays.asList("Salman Khan", "Katrina Kaif")
 		);
+		movieService.addMovie(ekThaTiger);
 
-		Movie bareillyKiBarfi = new Movie(
+		MovieRequestDTO bareillyKiBarfi = new MovieRequestDTO(
 				"Bareilly Ki Barfi",
 				"Bareilly Ki Barfi is a 2017 Indian Hindi-language romantic comedy film directed by Ashwiny Iyer Tiwari",
 				122,
 				"Hindi",
-				Genre.COMEDY,
-				Arrays.asList(rajkumarRao, ayushmannKhurrana, kritiSanon)
+				"COMEDY",
+				Arrays.asList("Rajkumar Rao", "Ayushmann Khurrana", "Kriti Sanon")
 		);
-
-		movieRepository.saveAll(Arrays.asList(pathan, welcome, ekThaTiger, bareillyKiBarfi));
+		movieService.addMovie(bareillyKiBarfi);
 	}
 
 	@SuppressWarnings("SpellCheckingInspection")

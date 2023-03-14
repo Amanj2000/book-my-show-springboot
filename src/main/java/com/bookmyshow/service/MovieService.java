@@ -8,6 +8,7 @@ import com.bookmyshow.repository.ActorRepository;
 import com.bookmyshow.repository.MovieRepository;
 import com.bookmyshow.helper.MovieHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,6 +23,9 @@ public class MovieService {
 
 	@Autowired
 	private MovieHelper movieHelper;
+
+	@Autowired
+	private KafkaTemplate<Integer, MovieRequestDTO> movieProducer;
 
 	public List<MovieResponseDTO> getAllMovies() {
 		List<MovieResponseDTO> movies = new ArrayList<>();
@@ -56,6 +60,8 @@ public class MovieService {
 		Movie movie = new Movie();
 		movieHelper.mapMovieRequestToMovie(movieRequestDTO, movie);
 		movieRepository.save(movie);
+		movieRequestDTO.setId(movie.getId());
+		movieProducer.send("movies", movieRequestDTO);
 		return new ResponseDTO(String.format("movie %s added successfully", movie.getTitle()));
 	}
 
