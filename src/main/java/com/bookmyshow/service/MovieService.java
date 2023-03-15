@@ -34,21 +34,6 @@ public class MovieService {
 		return movies;
 	}
 
-	public List<MovieResponseDTO> getByMovieName(String partialMovieName) {
-		return movieHelper.toMovieResponseDTOS(movieRepository.findByTitleContaining(partialMovieName));
-	}
-
-	public List<MovieResponseDTO> getByActorName(String actorName) {
-		Set<Movie> movies = new HashSet<>();
-		actorRepository.findByNameContaining(actorName)
-		               .forEach(actor -> movies.addAll(actor.getMovies()));
-		return movieHelper.toMovieResponseDTOS(new ArrayList<>(movies));
-	}
-
-	public List<MovieResponseDTO> getByGenre(String genre) {
-		return movieHelper.toMovieResponseDTOS(movieRepository.findByGenre(genre.toUpperCase()));
-	}
-
 	public MovieResponseDTO getMovie(int movieId) {
 		Movie movie = movieHelper.getMovie(movieId);
 		return new MovieResponseDTO(movie);

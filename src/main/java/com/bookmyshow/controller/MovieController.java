@@ -26,24 +26,6 @@ public class MovieController {
 		return new ResponseEntity<>(movieResponseDTOS, HttpStatus.OK);
 	}
 
-	@GetMapping(params = "movieName")
-	public ResponseEntity<?> getByMovieName(@RequestParam String movieName) {
-		List<MovieResponseDTO> movieResponseDTOS = movieService.getByMovieName(movieName);
-		return new ResponseEntity<>(movieResponseDTOS, HttpStatus.OK);
-	}
-
-	@GetMapping(params = "actorName")
-	public ResponseEntity<?> getByActorName(@RequestParam String actorName) {
-		List<MovieResponseDTO> movieResponseDTOS = movieService.getByActorName(actorName);
-		return new ResponseEntity<>(movieResponseDTOS, HttpStatus.OK);
-	}
-
-	@GetMapping(params = "genre")
-	public ResponseEntity<?> getByGenre(@RequestParam String genre) {
-		List<MovieResponseDTO> movieResponseDTOS = movieService.getByGenre(genre);
-		return new ResponseEntity<>(movieResponseDTOS, HttpStatus.OK);
-	}
-
 	@GetMapping("/{movieId}")
 	public ResponseEntity<?> getMovie(@PathVariable int movieId) {
 		MovieResponseDTO movieResponseDTO = movieService.getMovie(movieId);

@@ -4,19 +4,22 @@ import com.bookmyshow.model.Actor;
 import com.bookmyshow.model.Movie;
 import com.bookmyshow.model.enums.Genre;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
+@Getter @Setter
+@NoArgsConstructor
 public class MovieResponseDTO {
-	private final int id;
-	private final String title;
-	private final String description;
-	private final int duration;
-	private final String language;
-	private final Genre genre;
-	private final List<String> cast;
+	private int id;
+	private String title;
+	private String description;
+	private int duration;
+	private String language;
+	private Genre genre;
+	private List<String> cast;
 
 	public MovieResponseDTO(Movie movie) {
 		this.id = movie.getId();
@@ -28,5 +31,11 @@ public class MovieResponseDTO {
 		this.cast = movie.getActors().stream()
 				.map(Actor::getName)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public String toString() {
+		return String.format("id: %d \t title: %s \t desc: %s \t duration: %d \t language: %s \t genre: %s \t cast: %s\n",
+				id, title, description, duration, language, genre, cast);
 	}
 }
