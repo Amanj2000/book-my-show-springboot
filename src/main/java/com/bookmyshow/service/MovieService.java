@@ -25,7 +25,7 @@ public class MovieService {
 	private MovieHelper movieHelper;
 
 	@Autowired
-	private KafkaTemplate<Integer, MovieRequestDTO> movieProducer;
+	private KafkaTemplate<String, MovieRequestDTO> movieProducer;
 
 	public List<MovieResponseDTO> getAllMovies() {
 		List<MovieResponseDTO> movies = new ArrayList<>();
@@ -46,7 +46,7 @@ public class MovieService {
 		movieHelper.mapMovieRequestToMovie(movieRequestDTO, movie);
 		movieRepository.save(movie);
 		movieRequestDTO.setId(movie.getId());
-		movieProducer.send("movies", movieRequestDTO);
+		movieProducer.send("movies", "add", movieRequestDTO);
 		return new ResponseDTO(String.format("movie %s added successfully", movie.getTitle()));
 	}
 
@@ -56,12 +56,15 @@ public class MovieService {
 		Movie movie = movieHelper.getMovie(movieId);
 		movieHelper.mapMovieRequestToMovie(movieRequestDTO, movie);
 		movieRepository.save(movie);
+		movieRequestDTO.setId(movieId);
+		movieProducer.send("movies", "update", movieRequestDTO);
 		return new ResponseDTO(String.format("movie %s updated successfully", movie.getTitle()));
 	}
 
 	public ResponseDTO deleteMovie(int movieId) {
 		Movie movie = movieHelper.getMovie(movieId);
 		movieRepository.delete(movie);
+		movieProducer.send("movies", "delete", new MovieRequestDTO(movieId));
 		return new ResponseDTO(String.format("movie %s deleted successfully", movie.getTitle()));
 	}
 }

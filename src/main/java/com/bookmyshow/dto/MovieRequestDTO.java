@@ -33,6 +33,10 @@ public class MovieRequestDTO {
 	@NotEmpty
 	private List<String> cast;
 
+	public MovieRequestDTO(int movieId) {
+		this.id = movieId;
+	}
+
 	public MovieRequestDTO(String title, String description, int duration, String language, String genre, List<String> cast) {
 		this.title = title;
 		this.description = description;
