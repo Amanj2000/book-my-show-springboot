@@ -1,7 +1,6 @@
 package com.bookmyshow.service;
 
 import com.bookmyshow.dto.MovieResponseDTO;
-import com.bookmyshow.helper.search.ISearchMovie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,9 +10,6 @@ import java.util.*;
 
 @Service
 public class SearchService {
-	@Autowired
-	private List<ISearchMovie> searchMovies;
-
 	@Autowired
 	private RestTemplate restTemplate;
 
