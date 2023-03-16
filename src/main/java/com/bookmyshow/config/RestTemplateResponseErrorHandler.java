@@ -25,11 +25,12 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
 	@Override
 	public void handleError(ClientHttpResponse httpResponse) throws IOException {
 		byte[] responseBody = getResponseBody(httpResponse);
-		JSONObject json = new JSONObject(new String(responseBody,StandardCharsets.UTF_8));
+		String message = new String(responseBody,StandardCharsets.UTF_8);
 
 		if (httpResponse.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR) {
-			System.out.println("error occured in review-system service while processing request\n" + json);
+			System.out.println("error occured in review-system service while processing request\n" + message);
 		} else if (httpResponse.getStatusCode().series() == CLIENT_ERROR) {
+			JSONObject json = new JSONObject(message);
 			if (httpResponse.getStatusCode() == HttpStatus.NOT_FOUND) {
 				throw new EntityNotFoundException(json.getString("error"));
 			} else {

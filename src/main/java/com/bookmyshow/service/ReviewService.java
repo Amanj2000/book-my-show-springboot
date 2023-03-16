@@ -41,7 +41,7 @@ public class ReviewService {
 	}
 
 	public ResponseDTO editReview(int movieId, String email, ReviewRequestDTO reviewRequestDTO) {
-		String url = REVIEW_SYSTEM_URL + "/" + movieId + "/reviews";
+		String url = REVIEW_SYSTEM_URL + "/" + movieId + "/reviews" + "/" + email;
 		reviewRequestDTO.setUserEmail(email);
 		ResponseEntity<ResponseDTO> response = restTemplate.exchange(url,
 				HttpMethod.PUT,
@@ -51,12 +51,10 @@ public class ReviewService {
 	}
 
 	public ResponseDTO deleteReview(int movieId, String email) {
-		String url = REVIEW_SYSTEM_URL + "/" + movieId + "/reviews";
-		ReviewRequestDTO reviewRequestDTO = new ReviewRequestDTO();
-		reviewRequestDTO.setUserEmail(email);
+		String url = REVIEW_SYSTEM_URL + "/" + movieId + "/reviews" + "/" + email;
 		ResponseEntity<ResponseDTO> response = restTemplate.exchange(url,
 				HttpMethod.DELETE,
-				new HttpEntity<>(reviewRequestDTO),
+				HttpEntity.EMPTY,
 				ResponseDTO.class);
 		return response.getBody();
 	}
