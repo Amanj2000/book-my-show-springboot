@@ -26,9 +26,4 @@ public class KafkaTopicConfig {
 	public NewTopic movieTopic() {
 		return new NewTopic("movies", 1, (short) 1);
 	}
-
-	@Bean
-	public NewTopic searchTopic() {
-		return new NewTopic("search_query", 1, (short) 1);
-	}
 }

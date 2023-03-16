@@ -3,12 +3,11 @@ package com.bookmyshow.service;
 import com.bookmyshow.dto.MovieResponseDTO;
 import com.bookmyshow.helper.search.ISearchMovie;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
-
-import static java.lang.Thread.sleep;
 
 @Service
 public class SearchService {
@@ -16,25 +15,13 @@ public class SearchService {
 	private List<ISearchMovie> searchMovies;
 
 	@Autowired
-	private KafkaTemplate<String, String> searchProducer;
+	private RestTemplate restTemplate;
 
-	private final Map<String, List<MovieResponseDTO>> searchResult = new HashMap<>();
+	private final static String GLOBAL_SEARCH_URL = "http://localhost:3001/search";
 
-	public List<MovieResponseDTO> searchMovie(String query) {
-		searchProducer.send("search_query", query);
-
-		try {
-			while (!searchResult.containsKey(query)) sleep(100);
-		} catch(InterruptedException e) {
-			System.out.println("Error while fetching search result: " + e);
-		}
-
-		List<MovieResponseDTO> result = searchResult.get(query);
-		searchResult.remove(query);
-		return result;
-	}
-
-	public void addResult(String query, List<MovieResponseDTO> result) {
-		searchResult.put(query, result);
+	public List<MovieResponseDTO> searchMovie(String content) {
+		String url = GLOBAL_SEARCH_URL + "?content=" +  content;
+		ResponseEntity<MovieResponseDTO[]> response = restTemplate.getForEntity(url, MovieResponseDTO[].class);
+		return response.getBody() == null ? Collections.emptyList() : Arrays.asList(response.getBody());
 	}
 }

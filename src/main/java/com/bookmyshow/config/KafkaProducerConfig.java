@@ -33,19 +33,4 @@ public class KafkaProducerConfig {
 	public KafkaTemplate<String, MovieRequestDTO> movieKafkaTemplate() {
 		return new KafkaTemplate<>(movieProducerFactory());
 	}
-
-	@Bean
-	public ProducerFactory<String, String> searchProducerFactory() {
-		Map<String, Object> configs = new HashMap<>();
-		configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
-		configs.put(ProducerConfig.CLIENT_ID_CONFIG, "search-query-producer");
-		configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-		configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-		return new DefaultKafkaProducerFactory<>(configs);
-	}
-
-	@Bean
-	public KafkaTemplate<String, String> searchKafkaTemplate() {
-		return new KafkaTemplate<>(searchProducerFactory());
-	}
 }
