@@ -14,7 +14,6 @@ public class User {
     private Integer id;
 
     @Column(unique = true, nullable = false, updatable=false)
-    @Setter(AccessLevel.NONE)
     private String email;
 
     @Column(nullable = false)

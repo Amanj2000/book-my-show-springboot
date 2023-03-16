@@ -24,40 +24,43 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 public class AuthService {
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	AuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 
 	public ResponseDTO signup(SignupRequest signupRequest) {
 		if(userRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
-			return new ResponseDTO(false, "user by this email already exists");
-		} else {
-			User user = new User(signupRequest.getEmail(), passwordEncoder.encode(signupRequest.getPassword()),
-					signupRequest.getFirstName(), signupRequest.getLastName(), signupRequest.getAge());
-			userRepository.save(user);
-			return new ResponseDTO(true, "user has been registered");
+			throw new IllegalArgumentException("user by this email already exists");
 		}
+		User user = new User();
+		user.setEmail(signupRequest.getEmail());
+		user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+		user.setFirstName(signupRequest.getFirstName());
+		user.setLastName(signupRequest.getLastName());
+		user.setAge(signupRequest.getAge());
+
+		userRepository.save(user);
+		return new ResponseDTO("user has been registered");
 	}
 
 	public ResponseDTO login(HttpServletRequest req, LoginRequest loginRequest) {
 		Optional<User> userOptional = userRepository.findByEmail(loginRequest.getEmail());
-		if(!userOptional.isPresent() ||
-		   !passwordEncoder.matches(loginRequest.getPassword(), userOptional.get().getPassword())) {
-			return new ResponseDTO(false, "invalid credentials");
-		} else {
+		if(userOptional.isPresent() &&
+		   passwordEncoder.matches(loginRequest.getPassword(), userOptional.get().getPassword())) {
 			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
-							loginRequest.getPassword()));
+					loginRequest.getPassword()));
 			SecurityContext sc = SecurityContextHolder.getContext();
 			sc.setAuthentication(authentication);
 			HttpSession session = req.getSession(true);
 			session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
 
-			return new ResponseDTO(true, String.format("user %s successfully logged in",
+			return new ResponseDTO(String.format("user %s successfully logged in",
 					userOptional.get().getEmail()));
 		}
+		throw new IllegalArgumentException("invalid credentials");
 	}
 }

@@ -3,11 +3,14 @@ package com.bookmyshow.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter @Setter
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
+
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseDTO {
-	private String message;
+public class BookingRequestDTO {
+	@NotEmpty
+	List<String> seatNos;
 }

@@ -5,9 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.*;
+
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseDTO {
-	private String message;
+public class VoteRequestDTO {
+	private String userEmail;
+
+	@NotNull
+	private Integer value;
 }
