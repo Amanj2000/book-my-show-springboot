@@ -1,7 +1,8 @@
 package com.bookmyshow.model;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Date;
 
 
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "shows")
@@ -47,5 +48,10 @@ public class Show {
 		this.endTime = endTime;
 		this.movie = movie;
 		this.audi = audi;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("{show_id: %d, startTime: %s, endTime: %s, movie: %s}", id, startTime, endTime, movie.getTitle());
 	}
 }

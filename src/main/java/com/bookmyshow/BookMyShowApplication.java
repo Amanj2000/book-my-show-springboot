@@ -2,11 +2,9 @@ package com.bookmyshow;
 
 import com.bookmyshow.dto.MovieRequestDTO;
 import com.bookmyshow.model.*;
-import com.bookmyshow.model.enums.Genre;
 import com.bookmyshow.model.enums.SeatType;
 import com.bookmyshow.repository.AudiRepository;
 import com.bookmyshow.repository.AudiSeatRepository;
-import com.bookmyshow.repository.MovieRepository;
 import com.bookmyshow.repository.UserRepository;
 import com.bookmyshow.service.MovieService;
 import org.springframework.boot.CommandLineRunner;
@@ -28,11 +26,9 @@ public class BookMyShowApplication {
 
 	@Bean
 	CommandLineRunner commandLineRunner(UserRepository userRepository, PasswordEncoder passwordEncoder,
-	                                    MovieService movieService, AudiRepository audiRepository,
-	                                    AudiSeatRepository audiSeatRepository) {
+	                                    AudiRepository audiRepository, AudiSeatRepository audiSeatRepository) {
 		return args -> {
 //			saveUsers(userRepository, passwordEncoder);
-//			saveMovies(movieService);
 //			saveAudiSeats(audiRepository, audiSeatRepository);
 		};
 	}

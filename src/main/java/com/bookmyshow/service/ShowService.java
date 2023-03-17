@@ -46,7 +46,7 @@ public class ShowService {
 	}
 
 	public ResponseDTO addShow(int theatreId, int audiNo, ShowRequestDTO showRequestDTO) {
-		showHelper.canAdd(showRequestDTO.getDate(), showRequestDTO.getStartTime(), showRequestDTO.getEndTime());
+		showHelper.canAdd(theatreId, audiNo, showRequestDTO.getStartTime(), showRequestDTO.getEndTime());
 
 		Audi audi = showHelper.getAudi(theatreId, audiNo);
 
@@ -59,7 +59,7 @@ public class ShowService {
 	}
 
 	public ResponseDTO updateShow(int theatreId, int audiNo, int showId, ShowRequestDTO showRequestDTO) {
-		showHelper.canUpdate(showRequestDTO.getDate(), showRequestDTO.getStartTime(), showRequestDTO.getEndTime());
+		showHelper.canUpdate(theatreId, audiNo, showRequestDTO.getStartTime(), showRequestDTO.getEndTime());
 
 		Show show = showHelper.getShow(theatreId, audiNo, showId);
 		showHelper.mapShowRequestToShow(showRequestDTO, show);

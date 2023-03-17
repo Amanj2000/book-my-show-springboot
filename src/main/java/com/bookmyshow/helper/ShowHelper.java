@@ -75,13 +75,31 @@ public class ShowHelper {
 			throw new IllegalArgumentException("start time should be before end time");
 	}
 
-	public void canAdd(Date date, Date startTime, Date endTime) {
-		checkTime(startTime, endTime);
-		//TODO check for overlapping time
+	private boolean checkOverlap(Show show, Date startTime, Date endTime) {
+		if((show.getStartTime().compareTo(startTime) <= 0 && show.getEndTime().compareTo(startTime) > 0) ||
+		   (show.getStartTime().compareTo(endTime) < 0 && show.getEndTime().compareTo(endTime) >= 0) ||
+		   (show.getStartTime().compareTo(startTime) >= 0 && show.getEndTime().compareTo(endTime) <= 0))
+			return true;
+		return false;
 	}
 
-	public void canUpdate(Date date, Date startTime, Date endTime) {
+	private void checkSlot(int theatreId, int audiNo, Date startTime, Date endTime) {
+		Audi audi = getAudi(theatreId, audiNo);
+		List<Show> overlappingShows = showRepository.findByAudi(audi)
+		                                            .stream()
+		                                            .filter(show -> checkOverlap(show, startTime, endTime))
+		                                            .collect(Collectors.toList());
+		if(!overlappingShows.isEmpty())
+			throw new IllegalArgumentException(String.format("show timing overlapping with these shows %s", overlappingShows));
+	}
+
+	public void canAdd(int theatreId, int audiNo, Date startTime, Date endTime) {
 		checkTime(startTime, endTime);
-		//TODO check for overlapping time
+		checkSlot(theatreId, audiNo, startTime, endTime);
+	}
+
+	public void canUpdate(int theatreId, int audiNo, Date startTime, Date endTime) {
+		checkTime(startTime, endTime);
+		checkSlot(theatreId, audiNo, startTime, endTime);
 	}
 }
