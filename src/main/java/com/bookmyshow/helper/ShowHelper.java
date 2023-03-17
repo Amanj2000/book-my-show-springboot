@@ -76,11 +76,7 @@ public class ShowHelper {
 	}
 
 	private boolean checkOverlap(Show show, Date startTime, Date endTime) {
-		if((show.getStartTime().compareTo(startTime) <= 0 && show.getEndTime().compareTo(startTime) > 0) ||
-		   (show.getStartTime().compareTo(endTime) < 0 && show.getEndTime().compareTo(endTime) >= 0) ||
-		   (show.getStartTime().compareTo(startTime) >= 0 && show.getEndTime().compareTo(endTime) <= 0))
-			return true;
-		return false;
+		return (show.getStartTime().compareTo(endTime) < 0 && show.getEndTime().compareTo(startTime) > 0);
 	}
 
 	private void checkSlot(int theatreId, int audiNo, Date startTime, Date endTime) {
