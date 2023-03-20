@@ -79,11 +79,12 @@ public class ShowHelper {
 		return (show.getStartTime().compareTo(endTime) < 0 && show.getEndTime().compareTo(startTime) > 0);
 	}
 
-	private void checkSlot(int theatreId, int audiNo, Date startTime, Date endTime) {
+	private void checkSlot(int theatreId, int audiNo, Date startTime, Date endTime, int excludeShowId) {
 		Audi audi = getAudi(theatreId, audiNo);
 		List<Show> overlappingShows = showRepository.findByAudi(audi)
 		                                            .stream()
-		                                            .filter(show -> checkOverlap(show, startTime, endTime))
+		                                            .filter(show -> show.getId() != excludeShowId &&
+		                                                            checkOverlap(show, startTime, endTime))
 		                                            .collect(Collectors.toList());
 		if(!overlappingShows.isEmpty())
 			throw new IllegalArgumentException(String.format("show timing overlapping with these shows %s", overlappingShows));
@@ -91,11 +92,11 @@ public class ShowHelper {
 
 	public void canAdd(int theatreId, int audiNo, Date startTime, Date endTime) {
 		checkTime(startTime, endTime);
-		checkSlot(theatreId, audiNo, startTime, endTime);
+		checkSlot(theatreId, audiNo, startTime, endTime, 0);
 	}
 
-	public void canUpdate(int theatreId, int audiNo, Date startTime, Date endTime) {
+	public void canUpdate(int theatreId, int audiNo, Date startTime, Date endTime, int showId) {
 		checkTime(startTime, endTime);
-		checkSlot(theatreId, audiNo, startTime, endTime);
+		checkSlot(theatreId, audiNo, startTime, endTime, showId);
 	}
 }

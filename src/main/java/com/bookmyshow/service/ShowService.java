@@ -59,7 +59,7 @@ public class ShowService {
 	}
 
 	public ResponseDTO updateShow(int theatreId, int audiNo, int showId, ShowRequestDTO showRequestDTO) {
-		showHelper.canUpdate(theatreId, audiNo, showRequestDTO.getStartTime(), showRequestDTO.getEndTime());
+		showHelper.canUpdate(theatreId, audiNo, showRequestDTO.getStartTime(), showRequestDTO.getEndTime(), showId);
 
 		Show show = showHelper.getShow(theatreId, audiNo, showId);
 		showHelper.mapShowRequestToShow(showRequestDTO, show);
