@@ -12,11 +12,14 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -27,10 +30,16 @@ public class SecurityConfig {
 	private final static String LOGIN_URL = "/login";
 	private final static String LOGOUT_URL = "/logout";
 	private final static String[] PUBLIC_URLS = {DATABASE_URL + "/**", SIGNUP_URL, LOGIN_URL};
-	private final static String COOKIE_NAME = "JSESSIONID";
 
 	@Autowired
-	UserDetailsServiceImpl userDetailsServiceImpl;
+	private UserDetailsServiceImpl userDetailsServiceImpl;
+
+	@Autowired
+	private JwtAuthenticationFilter jwtAuthFilter;
+
+	@Autowired
+	private LogoutHandler logoutHandler;
+
 
 	@Bean
 	public AuthenticationManager authManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
@@ -47,14 +56,16 @@ public class SecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeRequests(auth -> auth
 						.antMatchers(PUBLIC_URLS).permitAll()
-						.anyRequest().authenticated()
-				)
+						.anyRequest().authenticated())
 				.userDetailsService(userDetailsServiceImpl)
+				.sessionManagement(session -> session
+						.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.headers(headers -> headers.frameOptions().sameOrigin())
+				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 				.logout(logout -> logout
 						.logoutUrl(LOGOUT_URL)
-						.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
-						.deleteCookies(COOKIE_NAME))
+						.addLogoutHandler(logoutHandler)
+						.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
 				.build();
 	}
 
