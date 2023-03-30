@@ -1,6 +1,7 @@
 package com.bookmyshow.controller;
 
 import com.bookmyshow.dto.LoginRequest;
+import com.bookmyshow.dto.LoginResponse;
 import com.bookmyshow.dto.ResponseDTO;
 import com.bookmyshow.dto.SignupRequest;
 import com.bookmyshow.service.AuthService;
@@ -28,7 +29,7 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(HttpServletRequest req, @Valid @RequestBody LoginRequest loginRequest) {
-		ResponseDTO responseDTO = authService.login(req, loginRequest);
-		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+		LoginResponse loginResponse = authService.login(req, loginRequest);
+		return new ResponseEntity<>(loginResponse, HttpStatus.OK);
 	}
 }
